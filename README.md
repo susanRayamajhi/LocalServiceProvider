@@ -1,2 +1,2 @@
 # LocalServiceFinder
-This is the group project
+This is the group project of team Debuggers.
