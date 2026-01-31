@@ -94,7 +94,7 @@ If the official website link is not yet active, click the link below to see the 
     </section>
 
     <footer class="py-12 text-center">
-        <p class="text-slate-400 text-sm">© 2026 Team Debuggers | Local Service Finder</p>
+        <p class="text-slate-400 text-sm">© 2026 Team Debuggers | Local Service Provider</p>
     </footer>
 
 </body>
