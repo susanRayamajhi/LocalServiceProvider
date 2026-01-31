@@ -1,4 +1,71 @@
-# 🛠️ Local Service Finder
-> This is the official overview for our group project.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Local Service Provider | Overview</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .primary-gradient {
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #2563eb, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
 
-[🚀 VIEW OVERVIEW WEBSITE](PASTE_YOUR_LINK_HERE)
+    <nav class="p-6 max-w-7xl mx-auto flex justify-between items-center">
+        <div class="text-2xl font-black tracking-tight text-blue-600 uppercase">
+            Local Service <span class="text-slate-400">Provider</span>
+        </div>
+    </nav>
+
+    <header class="max-w-7xl mx-auto px-6 py-12 md:py-20 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+            <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6 text-gradient">
+                Expert Help, <br> Just a Click Away.
+            </h1>
+            <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                Our platform connects homeowners with verified local professionals. 
+                Fast, secure, and reliable service at your doorstep.
+            </p>
+        </div>
+
+        <div class="relative">
+            <div class="absolute -top-6 -left-6 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            
+            <div class="relative bg-white p-2 rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
+                <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*BQ9l-cT7CYYFwzDRBMdJMQ.gif" 
+                     alt="Local Service App Demo" 
+                     class="rounded-2xl w-full h-auto">
+            </div>
+        </div>
+    </header>
+
+    <section class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-4">Project Overview</h2>
+            <p class="text-slate-500 max-w-2xl mx-auto">This application serves as a bridge between service seekers and providers, ensuring a seamless booking experience with real-time tracking.</p>
+        </div>
+    </section>
+
+</body>
+</html>
+
+
+# 🛠️ Local Service Provider - Project Demo
+> **Connecting neighborhoods with trusted professionals.**
+
+### 🌐 Quick Preview
+If the official website link is not yet active, click the link below to see the live view of our project:
+
+👉 [**CLICK HERE TO SEE LIVE DEMO**](https://htmlpreview.github.io/?https://github.com/susanrayamajhi/LocalServiceFinder/blob/main/index.html)
+
+---
+
