@@ -7,7 +7,7 @@ Team Members: [Susan, Saurab, Vidhi, Vatsal, Abhishek]
 Date: [30/01/2026] 
 1. Purpose 
 This Code of Conduct defines the expectations for team behavior, communication, and 
-responsibilities. All team members agree to follow these rules to ensure a productive and respectful 
+responsibilities. All team members agree to follow these rules to ensure a productive and respectful  
 working environment. 
 2. Team Roles 
 • Scrum Master (Susan): Facilitates meetings and ensures Scrum principles are followed. 
