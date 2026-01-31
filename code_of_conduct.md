@@ -37,21 +37,10 @@ necessary.
 8. Agreement 
 By signing below, each team member agrees to follow this Code of Conduct and contribute to the 
 success of the project. 
-Name 
-Role 
-Susan Rayamajhi 
-Scrum Master , Frontend Developer 1  
-Signature Date 
-30/01/2026 
-Abhishek Parikh 
-Frontend Developer 2 / Database supporter  
-30/01/2026 
-Vatsal Tailor 
-Product Owner / Database Designer   
-30/01/2026 
-Vidhi Rami 
-Backend Developer 2 / Frontend Supporter  
-30/01/2026 
-Saurab Pandey 
-Backend Developer 1, server-side logic  
-30/01/2026 
+
+   Name                         Role                                       Signature                   Date 
+Susan Rayamajhi      Scrum Master , Frontend Developer 1               (Susan Rayamajhi)             30/01/2026 
+Abhishek Parikh      Frontend Developer 2 / Database supporter         (Abhishek Parikh)             30/01/2026 
+Vatsal Tailor        Product Owner / Database Designer                 (Vatsal Tailor)               30/01/2026 
+Vidhi Rami           Backend Developer 2 / Frontend Supporter          (Vidhi Rami)                  30/01/2026 
+Saurab Pandey        Backend Developer 1, server-side logic            (Saurab Pandey)               30/01/2026 
