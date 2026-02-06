@@ -39,7 +39,7 @@ By signing below, each team member agrees to follow this Code of Conduct and con
 success of the project. 
 
    Name                         Role                                       Signature                   Date 
-Susan Rayamajhi      Scrum Master , Frontend Developer 1               (Susan Rayamajhi)             30/01/2026 
+Susan Rayamajhi      Scrum Master , Frontend Developer 1, Documentation               (Susan Rayamajhi)             30/01/2026 
 Abhishek Parikh      Frontend Developer 2 / Database supporter         (Abhishek Parikh)             30/01/2026 
 Vatsal Tailor        Product Owner / Database Designer                 (Vatsal Tailor)               30/01/2026 
 Vidhi Rami           Backend Developer 2 / Frontend Supporter          (Vidhi Rami)                  30/01/2026 
