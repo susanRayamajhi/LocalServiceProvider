@@ -1,0 +1,211 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2">
+  <diagram name="Page-1" id="Ou6SW7K-TPItjz91xjmk">
+    <mxGraphModel dx="2329" dy="1313" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-1" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;verticalAlign=bottom;labelPosition=center;verticalLabelPosition=top;align=center;size=65;" value="Customer" vertex="1">
+          <mxGeometry height="1066" width="35" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-2" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="Web Browser (HTML/JS)" vertex="1">
+          <mxGeometry height="1066" width="190" x="325" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="Node.js/Express Server" vertex="1">
+          <mxGeometry height="1066" width="181" x="701" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};size=65;" value="MySQL Database" vertex="1">
+          <mxGeometry height="1066" width="150" x="1080" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;verticalAlign=bottom;labelPosition=center;verticalLabelPosition=top;align=center;size=65;" value="Partner" vertex="1">
+          <mxGeometry height="1066" width="35" x="1280" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-6" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-1" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-2" value="Selects Partner &amp; Clicks &quot;Book Now&quot;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="266" y="177" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-7" parent="4EUhTJsNZ0rEG7sMaPJx-6" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="1" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-170" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-8" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-2" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-3" value="POST /api/bookings (Address, Date)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="614" y="231" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-9" parent="4EUhTJsNZ0rEG7sMaPJx-8" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="2" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-193" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-10" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-4" value="Check if first-time booking?">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="982" y="285" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-11" parent="4EUhTJsNZ0rEG7sMaPJx-10" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="3" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-189.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-12" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-3" value="Result (True/False)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="985" y="339" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-13" parent="4EUhTJsNZ0rEG7sMaPJx-12" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="4" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="175.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-14" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-4" value="INSERT INTO bookings (Status: &#39;Pending&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="982" y="441" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-15" parent="4EUhTJsNZ0rEG7sMaPJx-14" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="5" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-189.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-16" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-3" value="BookingID Created">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="985" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-17" parent="4EUhTJsNZ0rEG7sMaPJx-16" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="6" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="175.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-18" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-2" value="Show &quot;Payment Successful&quot; (Dummy)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="617" y="549" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-19" parent="4EUhTJsNZ0rEG7sMaPJx-18" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="7" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="179" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-20" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-5" value="Notification: New Booking Request">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1082" y="603" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-21" parent="4EUhTJsNZ0rEG7sMaPJx-20" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="8" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-289.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-22" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-5" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-2" value="Clicks &quot;Accept Booking&quot;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="899" y="657" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-23" parent="4EUhTJsNZ0rEG7sMaPJx-22" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="9" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="461" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-24" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-2" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-3" value="PUT /api/bookings/:id (Status: &#39;Confirmed&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="614" y="711" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-25" parent="4EUhTJsNZ0rEG7sMaPJx-24" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="10" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-193" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-26" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-4" value="UPDATE bookings SET status=&#39;Confirmed&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="982" y="765" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-27" parent="4EUhTJsNZ0rEG7sMaPJx-26" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="11" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-189.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-28" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-4" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-3" value="Success">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="985" y="819" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-29" parent="4EUhTJsNZ0rEG7sMaPJx-28" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="12" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="175.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-30" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-1" value="Email: Booking Confirmed">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="455" y="873" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-31" parent="4EUhTJsNZ0rEG7sMaPJx-30" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="13" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="341.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-32" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-3" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-5" value="Email: Job Details Sent">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1082" y="927" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-33" parent="4EUhTJsNZ0rEG7sMaPJx-32" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="14" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-289.5" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-34" edge="1" parent="1" source="4EUhTJsNZ0rEG7sMaPJx-2" style="verticalAlign=bottom;edgeStyle=elbowEdgeStyle;elbow=vertical;curved=0;rounded=0;dashed=1;dashPattern=2 3;endArrow=block;" target="4EUhTJsNZ0rEG7sMaPJx-5" value="Dashboard Updated">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="896" y="981" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-35" parent="4EUhTJsNZ0rEG7sMaPJx-34" style="ellipse;aspect=fixed;fillColor=#000000;align=center;fontColor=#FFFFFF;" value="15" vertex="1">
+          <mxGeometry height="14" relative="1" width="14" as="geometry">
+            <mxPoint x="-475" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-36" parent="1" style="fillColor=#FF1600;strokeColor=#9E916F;" value="Service Booking Process" vertex="1">
+          <mxGeometry height="48" width="1110" x="70" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="4EUhTJsNZ0rEG7sMaPJx-37" parent="1" style="fillColor=#FF0705;strokeColor=#9E916F;" value="Logic: Apply 5% fee if NOT first time" vertex="1">
+          <mxGeometry height="48" width="275" x="816" y="359" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
