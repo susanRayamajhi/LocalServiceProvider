@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Local Service Provider</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">Local Service Provider</a>
+            </div>
+            <ul id="main-nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li id="nav-login"><a href="login.html">Login</a></li>
+                <li id="nav-signup"><a href="signup.html" class="button">Sign Up</a></li>
+                <li id="nav-profile" style="display:none;"><a href="profile.html">Profile</a></li>
+                <li id="nav-logout" style="display:none;"><a href="#" class="button" id="logout-btn">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <div class="form-container">
+                <h2>Create Your Account</h2>
+                <form class="signup-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="youremail@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Create a strong password" required>
+                    </div>
+                    <button type="submit" class="button">Sign Up</button>
+                </form>
+                <p>Already have an account? <a href="login.html">Login here</a>.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-about">
+                <h3>Local Service Provider</h3>
+                <p>Your one-stop solution for finding and booking trusted local service professionals.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="signup.html">Sign Up</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p>Email: support@localserviceprovider.com</p>
+                <p>Phone: 123-456-7890</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Local Service Provider. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
