@@ -10,6 +10,7 @@ module.exports = app => {
     router.use(verifyToken);
 
     // Get all users
+    
     router.get('/users', admin.getAllUsers);
 
     // Get all partners
