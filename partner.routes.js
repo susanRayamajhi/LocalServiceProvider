@@ -22,6 +22,7 @@ module.exports = app => {
     router.put('/bookings/:id/accept', partners.acceptBooking);
 
     // Reject booking
+    
     router.put('/bookings/:id/reject', partners.rejectBooking);
 
     // Partner Availability Routes
