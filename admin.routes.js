@@ -32,6 +32,7 @@ module.exports = app => {
     router.get('/bookings', admin.getAllBookings);
 
     // Cancel booking
+    
     router.put('/bookings/cancel/:id', admin.cancelBooking);
 
     // Update booking status
