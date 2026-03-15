@@ -10,6 +10,7 @@ app.set('view engine', 'pug');
 app.set('views', 'app/views');
 
 // Add cors and body-parser
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
