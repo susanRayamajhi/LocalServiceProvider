@@ -7,6 +7,7 @@ module.exports = app => {
     router.post('/login', admin.login);
 
     // Apply verifyToken middleware to all routes below this line
+    
     router.use(verifyToken);
 
     // Get all users
