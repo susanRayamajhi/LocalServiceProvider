@@ -49,6 +49,7 @@ app.get("/api/test", function(req, res) {
 });
 
 // Import the routes from the routes folder
+
 require("./routes/auth.routes.js")(app);
 require("./routes/partner.routes.js")(app);
 require("./routes/admin.routes.js")(app);
