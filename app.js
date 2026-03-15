@@ -21,6 +21,7 @@ app.use(express.static("static"));
 const db = require('./services/db');
 
 // Main routes for Pug views
+
 app.get("/", async function(req, res) {
     try {
         const services = await db.query("SELECT * FROM services LIMIT 6");
