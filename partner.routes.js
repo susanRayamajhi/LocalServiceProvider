@@ -5,6 +5,7 @@ module.exports = app => {
     const { verifyToken } = require('../middleware/authJwt');
 
     // Public routes (no token required)
+    
     router.post('/signup', partners.signup);
     router.post('/login', partners.login);
 
