@@ -7,6 +7,7 @@ module.exports = app => {
 
     // Login
     router.post('/login', users.login);
+    
 
     // OTP Verification
     router.post('/verify-otp', users.verifyOtp);
