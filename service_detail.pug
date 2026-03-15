@@ -22,7 +22,9 @@ block content
                                         .d-flex.w-100.justify-content-between
                                             h5.mb-1= provider.name
                                             small.text-warning Rating: #{provider.rating} ⭐
-                                        p.mb-1= provider.expertise
+                                        p.mb-1= provider.description
+                                        .d-flex.justify-content-end
+                                            a.btn.btn-sm.btn-success(href=`/book/${service.id}`) Book Now
                         else
                             p.text-muted No providers currently offering this service.
                         
