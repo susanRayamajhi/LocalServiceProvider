@@ -1,0 +1,46 @@
+extends layouts/main.pug
+
+block content
+    .row.justify-content-center.mt-5
+        .col-md-8
+            .card.shadow-lg.border-0
+                .card-header.bg-success.text-white.text-center.p-4
+                    h2.mb-0 Join as a Service Partner
+                    p.small.mb-0 Grow your business with us
+                .card-body.p-5
+                    form(action="/partner/signup" method="POST")
+                        .row
+                            .col-md-6.mb-3
+                                label.form-label Business/Full Name
+                                input.form-control(type="text" name="name" required placeholder="Fix-It Services")
+                            .col-md-6.mb-3
+                                label.form-label Email Address
+                                input.form-control(type="email" name="email" required placeholder="partner@example.com")
+                        .row
+                            .col-md-6.mb-3
+                                label.form-label Phone Number
+                                input.form-control(type="tel" name="phone" required placeholder="9876543210")
+                            .col-md-6.mb-3
+                                label.form-label Primary Service Category (from DB)
+                                select.form-select(name="service_id" required)
+                                    option(value="") Select a service...
+                                    each s in services
+                                        option(value=s.id)= s.name
+                        .mb-3
+                            label.form-label Tell us about your experience
+                            textarea.form-control(name="description" rows="3" placeholder="I have 5 years experience in...")
+                        .row
+                            .col-md-6.mb-3
+                                label.form-label Base Pricing (per hour/task)
+                                input.form-control(type="number" name="pricing" required placeholder="500")
+                            .col-md-6.mb-3
+                                label.form-label Experience (Years)
+                                input.form-control(type="number" name="experience" required placeholder="5")
+                        .mb-4
+                            label.form-label Upload Profile Image (URL)
+                            input.form-control(type="text" name="profile_image" placeholder="http://example.com/photo.jpg")
+                        .d-grid
+                            button.btn.btn-success.btn-lg(type="submit") Submit Application
+                    .text-center.mt-4
+                        p.text-muted Already a partner? 
+                            a(href="/login") Login here
