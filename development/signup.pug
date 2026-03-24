@@ -1,0 +1,31 @@
+extends layouts/main.pug
+
+block content
+    .row.justify-content-center.mt-5
+        .col-md-6
+            .card.shadow-lg.border-0
+                .card-header.bg-primary.text-white.text-center.p-4
+                    h2.mb-0 Create Your Account
+                    p.small.mb-0 Join Local Service Provider today
+                .card-body.p-5
+                    form(action="/signup" method="POST")
+                        .mb-3
+                            label.form-label Full Name
+                            input.form-control(type="text" name="name" required placeholder="John Doe")
+                        .mb-3
+                            label.form-label Email Address
+                            input.form-control(type="email" name="email" required placeholder="john@example.com")
+                        .mb-3
+                            label.form-label Phone Number
+                            input.form-control(type="tel" name="phone" required placeholder="9876543210")
+                        .mb-3
+                            label.form-label Password
+                            input.form-control(type="password" name="password" required placeholder="••••••••")
+                        .mb-3
+                            label.form-label Confirm Password
+                            input.form-control(type="password" name="confirm_password" required placeholder="••••••••")
+                        .d-grid.mt-4
+                            button.btn.btn-primary.btn-lg(type="submit") Create Account
+                    .text-center.mt-4
+                        p.text-muted Already have an account? 
+                            a(href="/login") Login here
