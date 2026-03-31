@@ -1,0 +1,42 @@
+extends layouts/main.pug
+
+block content
+    .row.mt-5
+        .col-md-3
+            .list-group.shadow-sm
+                a.list-group-item.list-group-item-action(href="/admin/dashboard") Dashboard
+                a.list-group-item.list-group-item-action(href="/admin/partners") Manage Partners
+                a.list-group-item.list-group-item-action.active(href="/admin/users") Manage Users
+                a.list-group-item.list-group-item-action(href="/admin/services") Manage Services
+                a.list-group-item.list-group-item-action(href="/admin/bookings") All Bookings
+                a.list-group-item.list-group-item-action(href="/admin/disputes") Disputes
+                a.list-group-item.list-group-item-action(href="/admin/payments") Payments
+        
+        .col-md-9
+            .d-flex.justify-content-between.align-items-center
+                h2 Manage Users
+
+            .card.mt-4.shadow-sm
+                .card-body
+                    table.table.table-hover
+                        thead
+                            tr
+                                th Name
+                                th Email
+                                th Status
+                                th Joined Date
+                                th Actions
+                        tbody
+                            each user in users
+                                tr
+                                    td= user.name
+                                    td= user.email
+                                    td
+                                        span.badge(class=`bg-${user.is_suspended ? 'danger' : 'success'}`)= user.is_suspended ? 'Suspended' : 'Active'
+                                    td= new Date(user.created_at).toLocaleDateString()
+                                    td
+                                        form(action=`/api/admin/users/${user.id}/toggle-suspend` method="POST" style="display:inline")
+                                            button.btn.btn-sm(class=`btn-outline-${user.is_suspended ? 'success' : 'danger'}` type="submit")= user.is_suspended ? 'Unsuspend' : 'Suspend'
+                            else
+                                tr
+                                    td.text-center(colspan="5") No users found.

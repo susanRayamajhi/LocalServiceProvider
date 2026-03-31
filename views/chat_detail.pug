@@ -1,0 +1,19 @@
+extends layouts/main.pug
+
+block content
+    .container.mt-5
+        h2.mb-4 Chat History
+        .card.shadow-sm
+            .card-header.bg-dark.text-white
+                | Conversation for Booking ##{bookingId}
+            .card-body.bg-light(style="height: 400px; overflow-y: auto;")
+                each msg in messages
+                    .mb-3.p-3.rounded(style=`max-width: 70%; ${msg.sender_type === 'user' ? 'margin-left: auto; background-color: #007bff; color: white;' : 'background-color: #e9ecef; color: black;'}`)
+                        strong= msg.sender_type === 'user' ? 'Me' : msg.partner_name
+                        p.mb-1= msg.message
+                        small(style="font-size: 0.75rem;")= new Date(msg.created_at).toLocaleTimeString()
+            .card-footer
+                form.d-flex
+                    input.form-control.me-2(type="text" placeholder="Type a message..." disabled)
+                    button.btn.btn-primary(type="button" disabled) Send
+        p.text-muted.mt-2.text-center (Note: Chat is currently READ-ONLY for Sprint 3 Demo)

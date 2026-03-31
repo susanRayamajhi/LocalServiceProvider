@@ -1,5 +1,6 @@
 module.exports = app => {
-    const router = require('express').Router();
+    const express = require('express');
+    const router = express.Router();
     const users = require('../controllers/user.controller.js');
 
     // Signup
@@ -7,7 +8,6 @@ module.exports = app => {
 
     // Login
     router.post('/login', users.login);
-    
 
     // OTP Verification
     router.post('/verify-otp', users.verifyOtp);

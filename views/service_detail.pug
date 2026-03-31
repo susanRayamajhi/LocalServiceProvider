@@ -24,7 +24,7 @@ block content
                                             small.text-warning Rating: #{provider.rating} ⭐
                                         p.mb-1= provider.description
                                         .d-flex.justify-content-end
-                                            a.btn.btn-sm.btn-success(href=`/book/${service.id}`) Book Now
+                                            a.btn.btn-sm.btn-success(href=`/book/${service.id}?partner_id=${provider.id}`) Book Now
                         else
                             p.text-muted No providers currently offering this service.
                         

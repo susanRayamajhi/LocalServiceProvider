@@ -28,7 +28,7 @@ block content
                                                 h6.card-title= service.name
                                                 .d-flex.justify-content-between
                                                     a.btn.btn-sm.btn-link.p-0(href=`/services/${service.id}`) Details
-                                                    a.btn.btn-sm.btn-success.py-0(href=`/book/${service.id}`) Book
+                                                    a.btn.btn-sm.btn-success.py-0(href=`/book/${service.id}?partner_id=${provider.id}`) Book
                         else
                             p.text-muted No services listed for this provider.
                         

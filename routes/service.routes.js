@@ -1,15 +1,30 @@
 module.exports = app => {
-    const router = require('express').Router();
-    const services = require('../controllers/service.controller.js');
+    const express = require('express');
+    const router = express.Router();
+    const Service = require('../models/service.model');
 
     // Get all services
-    router.get('/', services.getAll);
+    router.get('/', async (req, res) => {
+        try {
+            const services = await Service.getAll();
+            res.json(services);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Server Error' });
+        }
+    });
 
-    // Search for services
-    router.get('/search', services.search);
-
-    // Get all partners for a service
-    router.get('/:id/partners', services.getPartners);
+    // Get single service
+    router.get('/:id', async (req, res) => {
+        try {
+            const service = await Service.getById(req.params.id);
+            if (!service) return res.status(404).json({ message: 'Service not found' });
+            res.json(service);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Server Error' });
+        }
+    });
 
     app.use('/api/services', router);
 };

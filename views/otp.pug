@@ -3,18 +3,43 @@ extends layouts/main.pug
 block content
     .row.justify-content-center.mt-5
         .col-md-5
-            .card.shadow-lg.border-0.text-center
-                .card-header.bg-warning.text-dark.p-4
-                    h2.mb-0 Verify Your Email
-                    p.small.mb-0 A 6-digit code was sent to you
+            .card.shadow-lg.border-0
+                .card-header.bg-warning.text-dark.text-center.p-4
+                    h2.mb-0 Verify Email
+                    p.small.mb-0 Enter the 6-digit OTP sent to your email
                 .card-body.p-5
-                    form(action="/verify-otp" method="POST")
+                    form(id="otpForm")
+                        input(type="hidden" name="email" value=email)
                         .mb-4
-                            label.form-label Enter 6-digit OTP
-                            input.form-control.form-control-lg.text-center(type="text" name="otp" required maxlength="6" pattern="[0-9]{6}" placeholder="123456")
-                        .d-grid.mb-3
-                            button.btn.btn-primary.btn-lg(type="submit") Verify & Continue
+                            label.form-label OTP Code
+                            input.form-control.form-control-lg.text-center.ls-wide(type="text" name="otp" required placeholder="000000" maxlength="6")
+                        .d-grid
+                            button.btn.btn-warning.btn-lg(type="submit") Verify & Continue
+                    .text-center.mt-4
                         p.text-muted Didn't receive code? 
-                            a(href="/resend-otp") Resend OTP
-                    .mt-4.p-3.bg-light.rounded.border
-                        p.small.mb-0.text-info **Hint:** For testing, find your OTP in the 'otps' table of your database.
+                            a(href="#") Resend OTP
+
+    script.
+        document.getElementById('otpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('/api/auth/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Email verified successfully! You can now login.');
+                    window.location.href = '/login';
+                } else {
+                    alert(result.message || 'Verification failed');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred during verification');
+            }
+        });

@@ -1,32 +1,49 @@
 services:
-  web:
-    build:
-      context: ./
-    volumes:
-      - .:/src
-      - /src/node_modules
-    command: supervisor -e  'js,pug,html' index.js
+  app:
+    build: .
+    container_name: lsp_app
     ports:
       - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+    environment:
+      - DB_CONTAINER=db
+      - NODE_ENV=development
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: lsp_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: lsp_pma
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     depends_on:
       - db
-  db:
-    image: mysql
-    restart: always
-    env_file:
-      - ./.env
-    ports:
-      - "3309:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    restart: always
-    env_file:
-      - ./.env
-    ports:
-      - "8082:80"
 
 volumes:
-  mysql_data:
+  db_data:

@@ -1,0 +1,15 @@
+extends layouts/main.pug
+
+block content
+    h1.my-5.text-center Our Service Partners
+    .row
+        each provider in providers
+            .col-md-4.mb-4
+                .card.h-100.border-primary
+                    .card-body
+                        .d-flex.justify-content-between.align-items-start
+                            h5.card-title= provider.name
+                            span.badge.bg-warning.text-dark= provider.rating
+                        h6.card-subtitle.mb-2.text-muted= provider.description
+                        p.card-text= provider.phone
+                        a.btn.btn-outline-primary.w-100(href=`/providers/${provider.id}`) View Profile

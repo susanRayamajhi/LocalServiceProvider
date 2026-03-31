@@ -1,0 +1,41 @@
+extends layouts/main.pug
+
+block content
+    .row.mt-5
+        .col-md-3
+            .list-group.shadow-sm
+                a.list-group-item.list-group-item-action(href="/admin/dashboard") Dashboard
+                a.list-group-item.list-group-item-action(href="/admin/partners") Manage Partners
+                a.list-group-item.list-group-item-action(href="/admin/users") Manage Users
+                a.list-group-item.list-group-item-action(href="/admin/services") Manage Services
+                a.list-group-item.list-group-item-action.active(href="/admin/bookings") All Bookings
+                a.list-group-item.list-group-item-action(href="/admin/disputes") Disputes
+                a.list-group-item.list-group-item-action(href="/admin/payments") Payments
+        
+        .col-md-9
+            h2 All System Bookings
+
+            .card.mt-4.shadow-sm
+                .card-body
+                    table.table.table-hover
+                        thead
+                            tr
+                                th ID
+                                th Customer
+                                th Partner
+                                th Service
+                                th Status
+                                th Date
+                        tbody
+                            each booking in bookings
+                                tr
+                                    td ##{booking.id}
+                                    td= booking.customer_name
+                                    td= booking.partner_name
+                                    td= booking.service_name
+                                    td
+                                        span.badge(class=`bg-${booking.status === 'Completed' ? 'success' : booking.status === 'Pending' ? 'warning' : 'info'}`)= booking.status
+                                    td= booking.date
+                            else
+                                tr
+                                    td.text-center(colspan="6") No bookings found.

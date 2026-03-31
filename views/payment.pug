@@ -1,0 +1,41 @@
+extends layouts/main.pug
+
+block content
+    .container.py-5
+        .row.justify-content-center
+            .col-md-6
+                .card.shadow-lg.border-0
+                    .card-header.bg-success.text-white.text-center.p-4
+                        h2.mb-0 Secure Payment
+                        p.small.mb-0 Complete your booking for #{booking.service_name}
+                    .card-body.p-5
+                        .mb-4.text-center
+                            h1.display-5.text-primary $#{booking.total_cost}
+                            p.text-muted Booking ID: ##{booking.id}
+                        
+                        form(id="paymentForm")
+                            .mb-3
+                                label.form-label Cardholder Name
+                                input.form-control(type="text" required placeholder="John Doe")
+                            .mb-3
+                                label.form-label Card Number
+                                input.form-control(type="text" required placeholder="•••• •••• •••• ••••")
+                            .row
+                                .col-6
+                                    .mb-3
+                                        label.form-label Expiry
+                                        input.form-control(type="text" required placeholder="MM/YY")
+                                .col-6
+                                    .mb-3
+                                        label.form-label CVV
+                                        input.form-control(type="password" required placeholder="•••")
+                            
+                            .d-grid.mt-4
+                                button.btn.btn-success.btn-lg(type="submit") Pay Now
+    
+    script.
+        document.getElementById('paymentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Payment processed successfully!');
+            window.location.href = '/bookings';
+        });

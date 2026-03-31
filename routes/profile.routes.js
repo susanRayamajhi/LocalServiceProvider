@@ -1,10 +1,14 @@
 module.exports = app => {
     const router = require('express').Router();
     const profile = require('../controllers/profile.controller.js');
-    const { verifyToken } = require('../middleware/authJwt');
 
-    // Apply verifyToken middleware to all routes in this router
-    router.use(verifyToken);
+    // Simple middleware to check if user is logged in
+    const isLoggedIn = (req, res, next) => {
+        if (req.session.uid) next();
+        else res.status(401).send({ message: "Unauthorized!" });
+    };
+
+    router.use(isLoggedIn);
 
     // Get user profile
     router.get('/:id', profile.getProfile);

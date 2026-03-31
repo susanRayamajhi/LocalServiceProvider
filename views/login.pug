@@ -8,7 +8,12 @@ block content
                     h2.mb-0 Welcome Back
                     p.small.mb-0 Login to access your account
                 .card-body.p-5
-                    form(action="/login" method="POST")
+                    if error
+                        .alert.alert-danger= error
+                    if message
+                        .alert.alert-success= message
+                    
+                    form(action="/api/auth/login" method="POST")
                         .mb-4
                             label.form-label Email Address
                             input.form-control.form-control-lg(type="email" name="email" required placeholder="john@example.com")
@@ -25,3 +30,5 @@ block content
                     .text-center.mt-4
                         p.text-muted New here? 
                             a(href="/signup") Create an account
+                        p.text-muted Are you a partner? 
+                            a(href="/partner/signup") Partner Signup
