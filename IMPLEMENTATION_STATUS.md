@@ -43,9 +43,8 @@ This document summarizes the current state of the implementation as of Sprint 2 
 
 ## How to Run
 1. Ensure Docker Desktop is running.
-2. `cd development`
-3. `docker-compose up --build`
-4. Access at `http://localhost:3000`
+2. `docker compose up --build`
+3. Access at `http://localhost:3000`
 
 ### Sample Accounts (Password: `password123`)
 - Admin: `admin@gmail.com`
