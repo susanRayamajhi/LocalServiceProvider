@@ -34,6 +34,7 @@ exports.login = async (req, res) => {
             return res.status(400).render('login', { title: 'Login', error: "Email and password are required!" });
         }
 
+        // 1. Try to find in users table
         const user = await User.findByEmail(email);
         if (user) {
             const userModel = new User(email);
@@ -53,25 +54,26 @@ exports.login = async (req, res) => {
                 if (req.session.role === 'admin') return res.redirect('/admin/dashboard');
                 return res.redirect('/');
             }
-        } else {
-            // Check partners table
-            const [partnerRows] = await db.query("SELECT * FROM partners WHERE email = ?", [email]);
-            if (partnerRows.length > 0) {
-                const partner = partnerRows[0];
-                const match = await bcrypt.compare(password, partner.password);
-                if (match) {
-                    req.session.uid = partner.id;
-                    req.session.role = 'partner';
-                    req.session.user = {
-                        id: partner.id,
-                        name: partner.name,
-                        email: partner.email,
-                        role: 'partner'
-                    };
-                    return res.redirect('/partner/dashboard');
-                }
+        }
+
+        // 2. If not found in users or password didn't match, check partners table
+        const [partnerRows] = await db.query("SELECT * FROM partners WHERE email = ?", [email]);
+        if (partnerRows.length > 0) {
+            const partner = partnerRows[0];
+            const match = await bcrypt.compare(password, partner.password);
+            if (match) {
+                req.session.uid = partner.id;
+                req.session.role = 'partner';
+                req.session.user = {
+                    id: partner.id,
+                    name: partner.name,
+                    email: partner.email,
+                    role: 'partner'
+                };
+                return res.redirect('/partner/dashboard');
             }
         }
+
         res.status(401).render('login', { title: 'Login', error: "Invalid email or password!" });
     } catch (err) {
         console.error(err);

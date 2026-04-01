@@ -1,4 +1,5 @@
 -- Database: local_service_provider
+-- Consolidated schema for Sprint 3 (Adjusted for application compatibility)
 CREATE DATABASE IF NOT EXISTS local_service_provider;
 USE local_service_provider;
 
@@ -203,6 +204,14 @@ CREATE TABLE IF NOT EXISTS partner_earnings (
     FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS partner_img (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    partner_id INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE
+);
+
 -- =============================================================================
 -- 7. SYSTEM & AUTHENTICATION
 -- =============================================================================
@@ -215,11 +224,18 @@ CREATE TABLE IF NOT EXISTS otps (
     expires_at TIMESTAMP NULL
 );
 
+CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
 -- =============================================================================
--- 8. COMPREHENSIVE SAMPLE DATA (Password is 'password123' hashed)
+-- 8. COMPREHENSIVE SAMPLE DATA (Password: 'password123')
 -- =============================================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE partner_img;
 TRUNCATE TABLE withdrawal_requests;
 TRUNCATE TABLE partner_documents;
 TRUNCATE TABLE notifications;
@@ -234,37 +250,55 @@ TRUNCATE TABLE addresses;
 TRUNCATE TABLE users;
 TRUNCATE TABLE services;
 TRUNCATE TABLE service_categories;
+TRUNCATE TABLE admins;
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- Common Hash for 'password123'
+SET @common_hash = '$2a$10$I67c33eQxMh6ej57qiEj9eWviiko7S40LcvauJK3asR2ZKgLZN6s6';
 
 -- 1. service_categories
 INSERT INTO service_categories (id, name, description, image) VALUES
-(1, 'Carpentry', 'Woodwork and furniture repairs', 'carpentry_icon.png'),
-(2, 'Pest Control', 'Eradicating unwanted pests', 'pest_control_icon.png'),
-(3, 'Appliance Repair', 'Fixing household appliances', 'appliance_repair_icon.png');
+(101, 'Carpentry', 'Woodwork and furniture repairs', 'carpentry_icon.png'),
+(102, 'Pest Control', 'Eradicating unwanted pests', 'pest_control_icon.png'),
+(103, 'Appliance Repair', 'Fixing household appliances', 'appliance_repair_icon.png'),
+(104, 'Gardening', 'Garden maintenance and landscaping', 'gardening_icon.png'),
+(105, 'Painting', 'Interior and exterior home painting', 'painting_icon.png'),
+(106, 'AC Services', 'Air conditioning repair and maintenance', 'ac_services_icon.png'),
+(107, 'Beauty & Spa', 'Professional grooming and spa at home', 'beauty_spa_icon.png'),
+(108, 'Electrical', 'Electrical wiring and repairs', 'electrical_icon.png'),
+(109, 'Plumbing', 'Water pipe and faucet repairs', 'plumbing_icon.png'),
+(110, 'Automobile', 'Car and bike maintenance', 'auto_icon.png');
 
 -- 2. services
 INSERT INTO services (id, category_id, name, description, image, base_price) VALUES
-(1, 1, 'Furniture Assembly', 'Assembling new furniture like beds, wardrobes', 'furniture_assembly.png', 120.00),
-(2, 2, 'Cockroach Control', 'Comprehensive pest control for kitchens', 'cockroach_control.png', 90.00),
-(3, 3, 'Washing Machine Repair', 'Fixing common washing machine issues', 'washing_machine.png', 110.00);
+(101, 101, 'Furniture Assembly', 'Assembling new furniture like beds, wardrobes', 'furniture_assembly.png', 120.00),
+(102, 102, 'Cockroach Control', 'Comprehensive pest control for kitchens', 'cockroach_control.png', 90.00),
+(103, 103, 'Washing Machine Repair', 'Fixing common washing machine issues', 'washing_machine.png', 110.00),
+(104, 104, 'Lawn Mowing', 'Regular lawn mowing and trimming', 'lawn_mowing.png', 70.00),
+(105, 105, 'Single Room Painting', 'Painting a single room with premium paint', 'room_painting.png', 200.00),
+(106, 106, 'AC Gas Refill', 'Refilling AC gas and general servicing', 'ac_gas.png', 130.00),
+(107, 107, 'Full Body Massage', 'Relaxing full body spa treatment', 'massage.png', 150.00),
+(108, 108, 'Fan Repair', 'Repairing ceiling or table fans', 'fan_repair.png', 50.00),
+(109, 109, 'Tap Leakage', 'Fixing leaky taps and faucets', 'tap_leak.png', 40.00),
+(110, 110, 'Car Wash', 'Full exterior and interior car cleaning', 'car_wash.png', 100.00);
 
--- 3. users (customer@gmail.com, admin@gmail.com)
+-- 3. users (customer@gmail.com and admin@gmail.com included)
 INSERT INTO users (id, name, email, password, phone, role) VALUES
-(1, 'Customer One', 'customer@gmail.com', '$2a$10$I67c33eQxMh6ej57qiEj9eWviiko7S40LcvauJK3asR2ZKgLZN6s6', '9876543210', 'customer'),
-(2, 'Admin User', 'admin@gmail.com', '$2a$10$I67c33eQxMh6ej57qiEj9eWviiko7S40LcvauJK3asR2ZKgLZN6s6', '9876543211', 'admin');
+(1, 'Admin User', 'admin@gmail.com', @common_hash, '9999999999', 'admin'),
+(2, 'Customer One', 'customer@gmail.com', @common_hash, '8888888888', 'customer'),
+(101, 'Alice Johnson', 'alice@example.com', @common_hash, '9876543210', 'customer'),
+(102, 'Bob Smith', 'bob@example.com', @common_hash, '9876543211', 'customer');
 
--- 4. partners (partner@gmail.com)
-INSERT INTO partners (id, name, email, password, phone, service_id, description, experience, rating, is_approved) VALUES
-(1, 'Mike Carpenter', 'partner@gmail.com', '$2a$10$I67c33eQxMh6ej57qiEj9eWviiko7S40LcvauJK3asR2ZKgLZN6s6', '8765432101', 1, 'Expert carpenter with 10 years experience', 10, 4.8, 1);
+-- 4. partners
+INSERT INTO partners (id, name, email, password, phone, service_id, description, pricing, experience, rating, is_approved) VALUES
+(101, 'Mike Carpentry', 'partner@gmail.com', @common_hash, '8765432101', 101, 'Expert carpenter with 10 years experience', '500', 10, 4.8, 1),
+(102, 'Pest Killers Inc', 'contact@pestkillers.com', @common_hash, '8765432102', 102, 'Certified pest control specialists', '300', 5, 4.5, 1);
 
--- 5. partner_availability
-INSERT INTO partner_availability (id, partner_id, available_date, start_time, end_time, status) VALUES
-(1, 1, '2026-04-01', '09:00:00', '17:00:00', 'Available');
-
--- 6. bookings
+-- 5. bookings
 INSERT INTO bookings (id, user_id, partner_id, service_id, booking_date, booking_time, total_cost, status) VALUES
-(1, 1, 1, 1, '2026-03-25', '10:00:00', 120.00, 'Completed');
+(101, 101, 101, 101, '2026-03-12', '10:00:00', 120.00, 'Pending'),
+(103, 102, 102, 102, '2026-03-13', '09:30:00', 110.00, 'Completed');
 
--- 7. reviews
-INSERT INTO reviews (id, booking_id, user_id, partner_id, rating, comment) VALUES
-(1, 1, 1, 1, 5, 'Great service, very professional.');
+-- 6. admins
+INSERT INTO admins (id, email, password) VALUES
+(101, 'admin@gmail.com', @common_hash);

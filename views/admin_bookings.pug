@@ -35,7 +35,7 @@ block content
                                     td= booking.service_name
                                     td
                                         span.badge(class=`bg-${booking.status === 'Completed' ? 'success' : booking.status === 'Pending' ? 'warning' : 'info'}`)= booking.status
-                                    td= booking.date
+                                    td= booking.booking_date
                             else
                                 tr
                                     td.text-center(colspan="6") No bookings found.

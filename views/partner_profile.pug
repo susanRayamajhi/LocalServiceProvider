@@ -32,12 +32,12 @@ block content
                         .row
                             .col-md-6.mb-3
                                 label.form-label Service Category
-                                select.form-select(name="serviceId")
+                                select.form-select(name="service_id")
                                     each service in allServices
-                                        option(value=service.id selected=(service.id == partner.serviceId))= service.name
+                                        option(value=service.id selected=(service.id == partner.service_id))= service.name
                             .col-md-6.mb-3
                                 label.form-label Base Rate ($/hr)
-                                input.form-control(type="number" name="rate" value=partner.rate)
+                                input.form-control(type="number" name="pricing" value=partner.pricing)
                         
                         .mb-3
                             label.form-label Portfolio Images

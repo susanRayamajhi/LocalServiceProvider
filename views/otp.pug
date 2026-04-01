@@ -8,7 +8,10 @@ block content
                     h2.mb-0 Verify Email
                     p.small.mb-0 Enter the 6-digit OTP sent to your email
                 .card-body.p-5
-                    form(id="otpForm")
+                    if error
+                        .alert.alert-danger= error
+                    
+                    form(action="/api/auth/verify-otp" method="POST")
                         input(type="hidden" name="email" value=email)
                         .mb-4
                             label.form-label OTP Code
@@ -18,28 +21,3 @@ block content
                     .text-center.mt-4
                         p.text-muted Didn't receive code? 
                             a(href="#") Resend OTP
-
-    script.
-        document.getElementById('otpForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-            
-            try {
-                const response = await fetch('/api/auth/verify-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
-                if (response.ok) {
-                    alert('Email verified successfully! You can now login.');
-                    window.location.href = '/login';
-                } else {
-                    alert(result.message || 'Verification failed');
-                }
-            } catch (err) {
-                console.error(err);
-                alert('An error occurred during verification');
-            }
-        });

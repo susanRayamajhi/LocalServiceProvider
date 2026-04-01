@@ -64,6 +64,9 @@ const partnerMiddleware = (req, res, next) => {
 };
 
 app.get("/profile", authMiddleware, profileController.getProfileUI);
+app.post("/profile/update", authMiddleware, (req, res) => {
+    res.send("Profile updated successfully (Mockup for Sprint 2)");
+});
 app.get("/book/:serviceId", authMiddleware, pageController.getBookingForm);
 
 // --- ADMIN UI ROUTES ---
@@ -81,7 +84,16 @@ app.get("/partner/dashboard", partnerMiddleware, partnerController.getDashboard)
 app.get("/partner/bookings", partnerMiddleware, partnerController.getBookings);
 app.get("/partner/availability", partnerMiddleware, partnerController.getAvailability);
 app.get("/partner/earnings", partnerMiddleware, partnerController.getEarnings);
+app.get("/partner/withdraw", partnerMiddleware, (req, res) => {
+    res.render("partner_withdrawal", { title: 'Withdraw Funds' });
+});
 app.get("/partner/profile", partnerMiddleware, partnerController.getProfileUI);
+app.post("/partner/profile", partnerMiddleware, (req, res) => {
+    res.send("Partner profile updated successfully (Mockup for Sprint 2)");
+});
+app.post("/partner/availability", partnerMiddleware, (req, res) => {
+    res.send("Availability updated successfully (Mockup for Sprint 2)");
+});
 
 // Logout
 app.get('/logout', function (req, res) {
