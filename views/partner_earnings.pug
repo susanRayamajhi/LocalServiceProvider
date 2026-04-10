@@ -50,7 +50,7 @@ block content
                                     td $#{payout.amount}
                                     td= payout.method
                                     td
-                                        span.badge.bg-success Completed
+                                        span.badge(class=`bg-${payout.status === 'Completed' ? 'success' : payout.status === 'Pending' ? 'warning' : 'danger'}`)= payout.status
                             else
                                 tr
                                     td.text-center(colspan="4") No payout history yet.

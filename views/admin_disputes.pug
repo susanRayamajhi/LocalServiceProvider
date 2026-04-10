@@ -28,13 +28,15 @@ block content
                         tbody
                             each dispute in disputes
                                 tr
-                                    td ##{dispute.bookingId}
-                                    td= dispute.raisedBy
+                                    td ##{dispute.booking_id}
+                                    td= dispute.raised_by_name
                                     td= dispute.reason
                                     td
-                                        span.badge.bg-danger Pending
+                                        span.badge.bg-warning= dispute.status
                                     td
-                                        button.btn.btn-sm.btn-outline-primary Resolve
+                                        form(action=`/api/admin/disputes/${dispute.id}/resolve` method="POST")
+                                            input.form-control.form-control-sm.mb-2(type="text" name="resolution" placeholder="Enter resolution detail" required)
+                                            button.btn.btn-sm.btn-success(type="submit") Resolve & Close
                             else
                                 tr
-                                    td.text-center(colspan="5") No active disputes.
+                                    td.text-center(colspan="5") No active disputes found.

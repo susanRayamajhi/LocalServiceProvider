@@ -1,6 +1,54 @@
-#footer
-footer.text-center.py-4
+footer.footer
     .container
-        p &copy; 2026 Local Service Provider. All rights reserved.
-        p Sprint 3 - Group Project Submission
+        .row.g-4
+            .col-lg-4
+                h5.text-white.mb-4
+                    i.fas.fa-tools.me-2
+                    | LSP
+                p.text-white-50.small.mb-4
+                    | Your trusted platform for booking high-quality home services. We connect you with the best local experts for everything from repairs to relaxation.
+                .social-links
+                    a(href="#"): i.fab.fa-facebook-f
+                    a(href="#"): i.fab.fa-twitter
+                    a(href="#"): i.fab.fa-instagram
+                    a(href="#"): i.fab.fa-linkedin-in
+            
+            .col-lg-2.col-md-6
+                h5 Quick Links
+                ul.list-unstyled
+                    li: a(href="/services") All Services
+                    li: a(href="/providers") Top Providers
+                    li: a(href="/signup") Create Account
+                    li: a(href="/login") Login
+            
+            .col-lg-2.col-md-6
+                h5 Support
+                ul.list-unstyled
+                    li: a(href="#") Help Center
+                    li: a(href="#") Terms of Service
+                    li: a(href="#") Privacy Policy
+                    li: a(href="#") Contact Us
+            
+            .col-lg-2.col-md-6
+                h5 For Professionals
+                ul.list-unstyled
+                    li: a(href="/partner/login") Partner Login
+                    li: a(href="/partner/signup") Join as Partner
+                    li: a(href="/admin/dashboard") Admin Access
+            
+            .col-lg-2
+                h5 Newsletter
+                p.text-white-50.small Get updates on new services and exclusive offers.
+                .input-group.mb-3
+                    input.form-control.bg-dark.border-secondary.text-white(type="text" placeholder="Email address" aria-label="Email address")
+                    button.btn.btn-primary(type="button") Join
         
+        hr.mt-5.mb-4.border-secondary
+        .row.align-items-center
+            .col-md-6.text-center.text-md-start
+                p.mb-0.text-white-50.small &copy; 2026 Local Service Provider. All rights reserved.
+            .col-md-6.text-center.text-md-end
+                ul.list-inline.mb-0
+                    li.list-inline-item: i.fab.fa-cc-visa.fa-2x.text-white-50
+                    li.list-inline-item: i.fab.fa-cc-mastercard.fa-2x.text-white-50
+                    li.list-inline-item: i.fab.fa-cc-paypal.fa-2x.text-white-50

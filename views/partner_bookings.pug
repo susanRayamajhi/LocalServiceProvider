@@ -37,6 +37,9 @@ block content
                                                 button.btn.btn-sm.btn-success.me-2(type="submit") Accept
                                             form(action=`/api/partners/bookings/${booking.id}/reject` method="POST" style="display:inline")
                                                 button.btn.btn-sm.btn-danger.me-2(type="submit") Reject
+                                        else if booking.status === 'Confirmed'
+                                            form(action=`/api/partners/bookings/${booking.id}/status/Completed` method="POST" style="display:inline")
+                                                button.btn.btn-sm.btn-primary.me-2(type="submit") Mark as Completed
                                         a.btn.btn-sm.btn-outline-primary(href=`/chat/${booking.id}`) Chat
                             else
                                 tr

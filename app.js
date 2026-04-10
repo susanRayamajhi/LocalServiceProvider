@@ -36,6 +36,18 @@ const adminController = require('./controllers/admin.controller');
 const partnerController = require('./controllers/partner.controller');
 const profileController = require('./controllers/profile.controller');
 
+// Multer for file uploads
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
+
 // --- PUBLIC UI ROUTES ---
 app.get("/", pageController.getHome);
 app.get("/services", pageController.getServices);
@@ -43,6 +55,7 @@ app.get("/services/:id", pageController.getServiceDetail);
 app.get("/providers", pageController.getProviders);
 app.get("/providers/:id", pageController.getProviderDetail);
 app.get("/login", pageController.getLogin);
+app.get("/partner/login", pageController.getPartnerLogin);
 app.get("/signup", pageController.getSignup);
 app.get("/partner/signup", partnerController.getSignupUI);
 app.get("/otp", pageController.getOtp);
@@ -64,9 +77,6 @@ const partnerMiddleware = (req, res, next) => {
 };
 
 app.get("/profile", authMiddleware, profileController.getProfileUI);
-app.post("/profile/update", authMiddleware, (req, res) => {
-    res.send("Profile updated successfully (Mockup for Sprint 2)");
-});
 app.get("/book/:serviceId", authMiddleware, pageController.getBookingForm);
 
 // --- ADMIN UI ROUTES ---
@@ -88,12 +98,10 @@ app.get("/partner/withdraw", partnerMiddleware, (req, res) => {
     res.render("partner_withdrawal", { title: 'Withdraw Funds' });
 });
 app.get("/partner/profile", partnerMiddleware, partnerController.getProfileUI);
-app.post("/partner/profile", partnerMiddleware, (req, res) => {
-    res.send("Partner profile updated successfully (Mockup for Sprint 2)");
-});
-app.post("/partner/availability", partnerMiddleware, (req, res) => {
-    res.send("Availability updated successfully (Mockup for Sprint 2)");
-});
+app.post("/partner/profile", partnerMiddleware, partnerController.updateProfile);
+app.post("/partner/availability", partnerMiddleware, partnerController.updateAvailability);
+app.post("/partner/upload-document", partnerMiddleware, upload.single('document'), partnerController.uploadDocument);
+
 
 // Logout
 app.get('/logout', function (req, res) {

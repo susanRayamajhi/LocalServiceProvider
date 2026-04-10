@@ -5,37 +5,52 @@ block content
         .row.justify-content-center
             .col-md-6
                 .card.shadow-lg.border-0
-                    .card-header.bg-success.text-white.text-center.p-4
-                        h2.mb-0 Secure Payment
-                        p.small.mb-0 Complete your booking for #{booking.service_name}
+                    .card-header.bg-primary.text-white.text-center.p-4.border-0
+                        h2.fw-bold.mb-0
+                            i.fas.fa-shield-alt.me-2
+                            | Secure Checkout
+                        p.opacity-75.small.mb-0 Payment for #{booking.service_name}
+                    
                     .card-body.p-5
-                        .mb-4.text-center
-                            h1.display-5.text-primary $#{booking.total_cost}
-                            p.text-muted Booking ID: ##{booking.id}
+                        .text-center.mb-5
+                            small.text-muted.text-uppercase.fw-bold.ls-1 Amount to Pay
+                            h1.display-4.fw-bold.text-primary.mb-0 $#{booking.total_cost}
+                            p.text-muted.small Booking ID: ##{booking.id}
                         
-                        form(id="paymentForm")
+                        form(action=`/bookings/${booking.id}/pay` method="POST")
                             .mb-3
-                                label.form-label Cardholder Name
-                                input.form-control(type="text" required placeholder="John Doe")
-                            .mb-3
-                                label.form-label Card Number
-                                input.form-control(type="text" required placeholder="•••• •••• •••• ••••")
-                            .row
-                                .col-6
-                                    .mb-3
-                                        label.form-label Expiry
-                                        input.form-control(type="text" required placeholder="MM/YY")
-                                .col-6
-                                    .mb-3
-                                        label.form-label CVV
-                                        input.form-control(type="password" required placeholder="•••")
+                                label.form-label.fw-bold Cardholder Name
+                                .input-group
+                                    span.input-group-text.bg-white: i.fas.fa-user.text-muted
+                                    input.form-control(type="text" name="card_name" required placeholder="John Doe")
                             
-                            .d-grid.mt-4
-                                button.btn.btn-success.btn-lg(type="submit") Pay Now
-    
-    script.
-        document.getElementById('paymentForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Payment processed successfully!');
-            window.location.href = '/bookings';
-        });
+                            .mb-3
+                                label.form-label.fw-bold Card Number
+                                .input-group
+                                    span.input-group-text.bg-white: i.fas.fa-credit-card.text-muted
+                                    input.form-control(type="text" name="card_number" required placeholder="0000 0000 0000 0000" maxlength="19")
+                            
+                            .row.g-3.mb-4
+                                .col-md-6
+                                    label.form-label.fw-bold Expiry Date
+                                    .input-group
+                                        span.input-group-text.bg-white: i.fas.fa-calendar-alt.text-muted
+                                        input.form-control(type="text" name="expiry" required placeholder="MM/YY" maxlength="5")
+                                .col-md-6
+                                    label.form-label.fw-bold CVV
+                                    .input-group
+                                        span.input-group-text.bg-white: i.fas.fa-lock.text-muted
+                                        input.form-control(type="password" name="cvv" required placeholder="***" maxlength="3")
+                            
+                            .d-grid
+                                button.btn.btn-primary.btn-lg(type="submit")
+                                    i.fas.fa-check-circle.me-2
+                                    | Complete Payment
+                        
+                        .text-center.mt-4
+                            p.small.text-muted
+                                i.fas.fa-lock.me-1
+                                | Your payment information is encrypted and secure.
+                    
+                    .card-footer.bg-light.text-center.py-3.border-0
+                        a.text-muted.small(href="/bookings") Cancel and Return

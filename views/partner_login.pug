@@ -6,10 +6,10 @@ block content
             .col-md-5
                 .card.shadow-lg.p-4.border-0
                     .text-center.mb-4
-                        .feature-icon.mx-auto.bg-primary-subtle.text-primary
-                            i.fas.fa-user
-                        h2.fw-bold User Login
-                        p.text-muted Sign in to manage your bookings
+                        .feature-icon.mx-auto.bg-success-subtle.text-success
+                            i.fas.fa-briefcase
+                        h2.fw-bold Partner Login
+                        p.text-muted Manage your professional services
                     
                     if error
                         .alert.alert-danger.alert-dismissible.fade.show(role="alert")
@@ -23,12 +23,12 @@ block content
                             = message
                             button.btn-close(type="button" data-bs-dismiss="alert" aria-label="Close")
                     
-                    form(action="/api/auth/login" method="POST")
+                    form(action="/api/partners/login" method="POST")
                         .mb-3
-                            label.form-label.fw-bold(for="email") Email Address
+                            label.form-label.fw-bold(for="email") Business Email
                             .input-group
                                 span.input-group-text.bg-white: i.fas.fa-envelope.text-muted
-                                input#email.form-control(type="email" name="email" placeholder="name@example.com" required)
+                                input#email.form-control(type="email" name="email" placeholder="partner@example.com" required)
                         .mb-4
                             label.form-label.fw-bold(for="password") Password
                             .input-group
@@ -36,10 +36,13 @@ block content
                                 input#password.form-control(type="password" name="password" placeholder="••••••••" required)
                         
                         .d-grid
-                            button.btn.btn-primary.btn-lg(type="submit")
+                            button.btn.btn-success.btn-lg(type="submit")
                                 i.fas.fa-sign-in-alt.me-2
-                                | Sign In as User
+                                | Sign In as Partner
                     
                     .text-center.mt-4
-                        p.mb-0 Don't have an account? 
-                            a.text-primary.fw-bold(href="/signup") Create one now
+                        p.mb-0 Not a partner yet? 
+                            a.text-success.fw-bold(href="/partner/signup") Join as Partner
+                        hr
+                        p.mb-0 Regular Customer? 
+                            a.text-primary.fw-bold(href="/login") User Login

@@ -1,30 +1,75 @@
 extends layouts/main.pug
 
 block content
-    .row.justify-content-center.mt-5
-        .col-md-8.text-center
-            .card.shadow-sm.p-5
-                .mb-4
-                    i.fa-solid.fa-circle-check.text-success.display-1
-                h2 Booking Successful!
-                p.lead Your service request has been processed.
-                
-                .card.bg-light.mt-4.mb-4
-                    .card-body
-                        h5.card-title Booking Details
-                        .row
-                            .col-6.text-end.fw-bold ID:
-                            .col-6.text-start ##{booking.id}
-                            .col-6.text-end.fw-bold Service:
-                            .col-6.text-start #{booking.service_name}
-                            .col-6.text-end.fw-bold Partner:
-                            .col-6.text-start #{booking.partner_name}
-                            .col-6.text-end.fw-bold Total Cost:
-                            .col-6.text-start $#{booking.total_cost}
-                            .col-6.text-end.fw-bold Status:
-                            .col-6.text-start
-                                span.badge.bg-info.text-dark= booking.status
-                
-                .d-flex.justify-content-center.gap-3
-                    a.btn.btn-primary(href="/bookings") View My Bookings
-                    a.btn.btn-outline-primary(href="/") Back to Home
+    .container.py-5
+        .row.justify-content-center
+            .col-lg-8
+                .card.shadow-lg.border-0.overflow-hidden
+                    .card-body.p-0
+                        .bg-primary.text-white.text-center.py-5
+                            .feature-icon.mx-auto.bg-white.text-primary.mb-3
+                                i.fas.fa-calendar-check
+                            h2.fw-bold Booking Details
+                            p.mb-0.opacity-75 Manage and track your service request
+                        
+                        .p-5
+                            .row.g-4
+                                .col-md-6
+                                    h6.text-muted.text-uppercase.small.ls-1.mb-3 Service Info
+                                    h4.fw-bold= booking.service_name
+                                    p.text-muted.small.mb-0
+                                        i.fas.fa-user-tie.me-2
+                                        | Provider: #{booking.partner_name}
+                                
+                                .col-md-6.text-md-end
+                                    h6.text-muted.text-uppercase.small.ls-1.mb-3 Current Status
+                                    - var statusClass = 'bg-warning'
+                                    if booking.status === 'Confirmed'
+                                        - statusClass = 'bg-info'
+                                    if booking.status === 'Completed'
+                                        - statusClass = 'bg-success'
+                                    if booking.status === 'Cancelled'
+                                        - statusClass = 'bg-danger'
+                                    span.badge.rounded-pill.px-4.py-2.fs-6(class=statusClass)= booking.status
+
+                            hr.my-5
+
+                            .row.g-4
+                                .col-md-4
+                                    div.p-3.bg-light.rounded-3
+                                        small.text-muted.d-block Date
+                                        span.fw-bold= new Date(booking.booking_date).toLocaleDateString()
+                                .col-md-4
+                                    div.p-3.bg-light.rounded-3
+                                        small.text-muted.d-block Time
+                                        span.fw-bold= booking.booking_time
+                                .col-md-4
+                                    div.p-3.bg-light.rounded-3
+                                        small.text-muted.d-block Total Cost
+                                        span.fw-bold.text-primary $#{booking.total_cost}
+
+                            if booking.note
+                                .mt-5
+                                    h6.text-muted.text-uppercase.small.ls-1.mb-3 Special Instructions
+                                    .p-4.bg-light.rounded-3.border-start.border-primary.border-4
+                                        p.mb-0.fst-italic= booking.note
+
+                            .mt-5.d-flex.justify-content-center.gap-3
+                                if booking.status === 'Confirmed'
+                                    a.btn.btn-success.btn-lg.px-5(href=`/bookings/${booking.id}/payment`)
+                                        i.fas.fa-credit-card.me-2
+                                        | Pay Now
+                                
+                                if booking.status === 'Pending' || booking.status === 'Confirmed'
+                                    form(action=`/bookings/${booking.id}/cancel` method="POST" onsubmit="return confirm('Are you sure?')")
+                                        button.btn.btn-outline-danger.btn-lg.px-5(type="submit")
+                                            i.fas.fa-times.me-2
+                                            | Cancel Booking
+                                
+                                a.btn.btn-light.btn-lg.px-5(href="/bookings")
+                                    i.fas.fa-arrow-left.me-2
+                                    | Back to List
+                    
+                    .card-footer.bg-light.text-center.py-3.border-0
+                        p.small.text-muted.mb-0 Need help? 
+                            a(href="#") Contact Support

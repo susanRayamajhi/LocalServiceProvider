@@ -13,8 +13,18 @@ exports.getHome = async (req, res) => {
 
 exports.getServices = async (req, res) => {
     try {
-        const services = await Service.getAll();
-        res.render("services_list", { title: 'Our Services', services });
+        const { search, category, minPrice, maxPrice } = req.query;
+        const filters = { search, category, minPrice, maxPrice };
+        
+        const services = await Service.getAll(filters);
+        const categories = await Service.getCategories();
+        
+        res.render("services_list", { 
+            title: 'Our Services', 
+            services, 
+            categories,
+            query: req.query 
+        });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error fetching services");
@@ -59,7 +69,12 @@ exports.getProviderDetail = async (req, res) => {
 
 exports.getLogin = (req, res) => {
     if (req.session.uid) return res.redirect('/');
-    res.render("login", { title: 'Login' });
+    res.render("login", { title: 'User Login' });
+};
+
+exports.getPartnerLogin = (req, res) => {
+    if (req.session.uid) return res.redirect('/partner/dashboard');
+    res.render("partner_login", { title: 'Partner Login' });
 };
 
 exports.getSignup = (req, res) => {
@@ -68,7 +83,12 @@ exports.getSignup = (req, res) => {
 };
 
 exports.getOtp = (req, res) => {
-    res.render("otp", { title: 'Verify OTP', email: req.query.email });
+    res.render("otp", { 
+        title: 'Verify OTP', 
+        email: req.query.email, 
+        type: req.query.type || 'user',
+        error: req.query.error
+    });
 };
 
 exports.getFeedback = (req, res) => {

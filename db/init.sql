@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20),
     role ENUM('customer', 'admin') DEFAULT 'customer',
     is_suspended BOOLEAN DEFAULT 0,
+    is_verified BOOLEAN DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -69,6 +70,7 @@ CREATE TABLE IF NOT EXISTS partners (
     rating DECIMAL(3, 2) DEFAULT 0.00,
     is_approved BOOLEAN DEFAULT FALSE,
     is_suspended BOOLEAN DEFAULT 0,
+    is_verified BOOLEAN DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
 );

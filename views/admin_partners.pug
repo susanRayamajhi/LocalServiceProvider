@@ -34,12 +34,16 @@ block content
                                     td= new Date(partner.created_at).toLocaleDateString()
                                     td
                                         span.badge(class=`bg-${partner.is_approved ? 'success' : 'warning'}`)= partner.is_approved ? 'Approved' : 'Pending'
+                                        if partner.is_suspended
+                                            span.badge.bg-danger.ms-2 Suspended
                                     td
                                         if !partner.is_approved
                                             form(action=`/api/admin/partners/${partner.id}/approve` method="POST" style="display:inline")
                                                 button.btn.btn-sm.btn-success.me-2(type="submit") Approve
+                                        form(action=`/api/admin/partners/${partner.id}/toggle-suspend` method="POST" style="display:inline")
+                                            button.btn.btn-sm.me-2(class=`btn-outline-${partner.is_suspended ? 'success' : 'danger'}` type="submit")= partner.is_suspended ? 'Unsuspend' : 'Suspend'
                                         form(action=`/api/admin/partners/${partner.id}/reject` method="POST" style="display:inline")
-                                            button.btn.btn-sm.btn-danger(type="submit") Reject
+                                            button.btn.btn-sm.btn-outline-danger(type="submit") Delete
                             else
                                 tr
                                     td.text-center(colspan="5") No partners found.

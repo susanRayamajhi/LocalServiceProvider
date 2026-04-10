@@ -41,19 +41,27 @@ block content
             .row.mt-4
                 .col-md-12
                     .card.shadow-sm
-                        .card-header.bg-white
-                            h5.mb-0 Registered Partners
+                        .card-header.bg-warning.text-white
+                            h5.mb-0 Pending Partner Approvals (User Story 21)
                         .card-body
                             table.table
                                 thead
                                     tr
                                         th Name
                                         th Service
-                                        th Status
+                                        th Joined Date
+                                        th Actions
                                 tbody
                                     each p in pendingPartners
                                         tr
                                             td= p.name
                                             td= p.service_name
+                                            td= new Date(p.created_at).toLocaleDateString()
                                             td 
-                                                span.badge(class=`bg-${p.is_approved ? 'success' : 'warning'}`)= p.is_approved ? 'Approved' : 'Pending'
+                                                form(action=`/api/admin/partners/${p.id}/approve` method="POST" style="display:inline")
+                                                    button.btn.btn-sm.btn-success.me-2(type="submit") Approve
+                                                form(action=`/api/admin/partners/${p.id}/reject` method="POST" style="display:inline")
+                                                    button.btn.btn-sm.btn-danger(type="submit") Reject
+                                    else
+                                        tr
+                                            td.text-center(colspan="4") No pending approvals.

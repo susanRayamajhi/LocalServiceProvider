@@ -47,12 +47,12 @@ block content
                         tbody
                             each tx in transactions
                                 tr
-                                    td= tx.id
-                                    td ##{tx.bookingId}
+                                    td= tx.transaction_id || 'N/A'
+                                    td ##{tx.booking_id}
                                     td $#{tx.amount}
                                     td
-                                        span.badge.bg-success Completed
-                                    td= tx.date
+                                        span.badge(class=`bg-${tx.status === 'Completed' ? 'success' : 'warning'}`)= tx.status
+                                    td= new Date(tx.created_at).toLocaleDateString()
                             else
                                 tr
                                     td.text-center(colspan="5") No transactions found.

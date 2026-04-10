@@ -10,6 +10,8 @@ module.exports = app => {
     router.put('/:id', partners.updateProfile);
     router.post('/bookings/:id/accept', partners.acceptBooking);
     router.post('/bookings/:id/reject', partners.rejectBooking);
+    router.post('/bookings/:bookingId/status/:status', partners.updateBookingStatus);
+    router.post('/withdraw', partners.requestWithdrawal);
 
     app.use('/api/partners', router);
 };
