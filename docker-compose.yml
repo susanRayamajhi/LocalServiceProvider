@@ -7,11 +7,15 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    env_file:
-      - .env
     environment:
-      - DB_CONTAINER=db
+      - DB_CONTAINER=${DB_CONTAINER:-db}
+      - DB_PORT=${DB_PORT:-3306}
+      - MYSQL_ROOT_USER=${MYSQL_ROOT_USER:-root}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-rootpassword}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-local_service_provider}
+      - SESSION_SECRET=${SESSION_SECRET:-local-service-provider-secret-key-2026}
       - NODE_ENV=development
+      - PORT=3000
     depends_on:
       db:
         condition: service_healthy
@@ -29,8 +33,9 @@ services:
       - db_data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
       retries: 10
 
   phpmyadmin:
