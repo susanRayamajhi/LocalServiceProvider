@@ -1,16 +1,15 @@
-module.exports = app => {
-    const express = require('express');
-    const router = express.Router();
-    const users = require('../controllers/user.controller.js');
+const auth = require('../controllers/auth.controller.js');
 
+module.exports = router => {
     // Signup
-    router.post('/signup', users.signup);
+    router.post('/api/auth/signup', auth.signup);
+    router.post('/api/partners/signup', auth.partnerSignup);
 
-    // Login
-    router.post('/login', users.login);
+    // Login (Decoupled for each role)
+    router.post('/api/auth/login', auth.customerLogin); // Customer login
+    router.post('/api/partners/login', auth.partnerLogin); // Partner login
+    router.post('/api/admin/login', auth.adminLogin); // Admin login
 
     // OTP Verification
-    router.post('/verify-otp', users.verifyOtp);
-
-    app.use('/api/auth', router);
+    router.post('/api/auth/verify-otp', auth.verifyOtp);
 };

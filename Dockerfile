@@ -1,20 +1,19 @@
-# Use official Node.js runtime as a parent image
 FROM node:18-alpine
 
-# Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Install nodemon globally for development
+RUN npm install -g nodemon
 
-# Install dependencies
+# Install dependencies first (for better caching)
+COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of the code
 COPY . .
 
-# Expose the port the app runs on
+# Match internal container port
 EXPOSE 3000
 
-# Command to run the application
-CMD ["npm", "start"]
+# Start with nodemon for development
+CMD ["nodemon", "app.js"]

@@ -1,17 +1,7 @@
-const db = require('./../db');
+const db = require('../config/db');
 
 class Chat {
-    constructor(data) {
-        this.id = data.id;
-        this.booking_id = data.booking_id;
-        this.sender_id = data.sender_id;
-        this.sender_type = data.sender_type;
-        this.message = data.message;
-        this.is_read = data.is_read;
-        this.created_at = data.created_at;
-    }
-
-    static async getChatThreadsByUser(user_id) {
+    static async getChatThreadsByUser(userId) {
         const sql = `
             SELECT cm.*, s.name as service_name, p.name as partner_name
             FROM chat_messages cm
@@ -22,11 +12,11 @@ class Chat {
             GROUP BY cm.booking_id
             ORDER BY cm.created_at DESC
         `;
-        const [results] = await db.query(sql, [user_id]);
+        const [results] = await db.query(sql, [userId]);
         return results;
     }
 
-    static async getMessagesByBooking(booking_id) {
+    static async getMessagesByBooking(bookingId) {
         const sql = `
             SELECT cm.*, p.name as partner_name
             FROM chat_messages cm
@@ -35,14 +25,17 @@ class Chat {
             WHERE cm.booking_id = ?
             ORDER BY cm.created_at ASC
         `;
-        const [results] = await db.query(sql, [booking_id]);
+        const [results] = await db.query(sql, [bookingId]);
         return results;
     }
 
     static async create(data) {
-        const sql = "INSERT INTO chat_messages SET ?";
-        const [result] = await db.query(sql, [data]);
-        return { id: result.insertId, ...data };
+        const { booking_id, sender_id, sender_type, message } = data;
+        const [result] = await db.query(
+            "INSERT INTO chat_messages (booking_id, sender_id, sender_type, message) VALUES (?, ?, ?, ?)",
+            [booking_id, sender_id, sender_type, message]
+        );
+        return result.insertId;
     }
 }
 

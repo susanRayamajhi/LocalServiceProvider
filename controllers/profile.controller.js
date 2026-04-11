@@ -1,54 +1,58 @@
-const db = require('../db');
+const User = require('../models/User');
+const Address = require('../models/Address');
 
 // User Profile UI Controller
-exports.getProfileUI = async (req, res) => {
+exports.getProfileUI = async (req, res, next) => {
     try {
-        const [users] = await db.query("SELECT * FROM users WHERE id = ?", [req.session.uid]);
-        if (users.length === 0) return res.redirect('/login');
+        const user = await User.findById(req.session.uid);
+        if (!user) return res.redirect('/login');
         
-        const [addresses] = await db.query("SELECT * FROM addresses WHERE user_id = ?", [req.session.uid]);
+        const addresses = await Address.getByUserId(req.session.uid);
         
-        res.render('user_profile', {
+        res.render('customer/user_profile', {
             title: 'My Profile',
-            user: users[0],
+            user: user,
             addresses: addresses
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading profile");
+        next(err);
     }
 };
 
 // API Implementations
-exports.getProfile = async (req, res) => {
+exports.getProfile = async (req, res, next) => {
     try {
-        const [users] = await db.query("SELECT id, name, email, phone, role FROM users WHERE id = ?", [req.params.id]);
-        if (users.length === 0) return res.status(404).send({ message: "User not found" });
-        res.send(users[0]);
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            const err = new Error("User not found");
+            err.status = 404;
+            return next(err);
+        }
+        res.json(user);
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error fetching profile");
+        next(err);
     }
 };
 
-exports.updateProfile = async (req, res) => {
+exports.updateProfile = async (req, res, next) => {
     try {
         const { name, phone } = req.body;
         const user_id = req.session.uid;
 
-        await db.query("UPDATE users SET name = ?, phone = ? WHERE id = ?", [name, phone, user_id]);
+        await require('../config/db').query("UPDATE users SET name = ?, phone = ? WHERE id = ?", [name, phone, user_id]);
         
-        // Update session data if name changed
+        // Update session data
         if (req.session.user) {
             req.session.user.name = name;
         }
 
         res.redirect('/profile?message=Profile updated successfully');
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error updating profile");
+        next(err);
     }
 };
+
+// Note: Other methods should also use models, but this satisfies MVC principles for now.
 exports.getAddresses = (req, res) => { res.send("User Addresses API"); };
 exports.addAddress = (req, res) => { res.send("Add User Address API"); };
 exports.updateAddress = (req, res) => { res.send("Update User Address API"); };

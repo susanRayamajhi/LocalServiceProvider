@@ -8,16 +8,16 @@ nav.navbar.navbar-expand-lg.fixed-top
         #navbarNav.collapse.navbar-collapse
             ul.navbar-nav.mx-auto
                 li.nav-item
-                    a.nav-link(href="/services")
+                    a.nav-link(href="/services" class=(path === '/services' ? 'active' : ''))
                         i.fas.fa-th-large.me-1
                         | Services
                 li.nav-item
-                    a.nav-link(href="/providers")
+                    a.nav-link(href="/providers" class=(path === '/providers' ? 'active' : ''))
                         i.fas.fa-user-tie.me-1
                         | Providers
                 if user && user.role === 'customer'
                     li.nav-item
-                        a.nav-link(href="/bookings")
+                        a.nav-link(href="/bookings" class=(path === '/bookings' ? 'active' : ''))
                             i.fas.fa-calendar-alt.me-1
                             | My Bookings
             
@@ -31,7 +31,7 @@ nav.navbar.navbar-expand-lg.fixed-top
                             if user.role === 'partner'
                                 li: a.dropdown-item(href="/partner/dashboard")
                                     i.fas.fa-chart-line.me-2
-                                    | Dashboard
+                                    | Partner Dashboard
                             if user.role === 'admin'
                                 li: a.dropdown-item(href="/admin/dashboard")
                                     i.fas.fa-user-shield.me-2
@@ -46,6 +46,6 @@ nav.navbar.navbar-expand-lg.fixed-top
                                 | Logout
                 else
                     li.nav-item
-                        a.nav-link(href="/login") Login
+                        a.nav-link(href="/customer/login") Login
                     li.nav-item.ms-lg-2
                         a.btn.btn-primary(href="/signup") Get Started

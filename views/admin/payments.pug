@@ -1,0 +1,58 @@
+extends ../layouts/main.pug
+
+block content
+    .row.mt-5
+        .col-md-3
+            .list-group.shadow-sm
+                a.list-group-item.list-group-item-action(href="/admin/dashboard") Dashboard
+                a.list-group-item.list-group-item-action(href="/admin/partners") Manage Partners
+                a.list-group-item.list-group-item-action(href="/admin/users") Manage Users
+                a.list-group-item.list-group-item-action(href="/admin/services") Manage Services
+                a.list-group-item.list-group-item-action(href="/admin/bookings") All Bookings
+                a.list-group-item.list-group-item-action(href="/admin/disputes") Disputes
+                a.list-group-item.list-group-item-action.active(href="/admin/payments") Payments
+        
+        .col-md-9
+            h2 Financial Management
+
+            .row.mt-4
+                .col-md-4
+                    .card.bg-success.text-white.text-center.mb-3
+                        .card-body
+                            h5 Total Revenue
+                            h2 $#{stats.totalRevenue}
+                .col-md-4
+                    .card.bg-primary.text-white.text-center.mb-3
+                        .card-body
+                            h5 Partner Payouts
+                            h2 $#{stats.totalPayouts}
+                .col-md-4
+                    .card.bg-info.text-white.text-center.mb-3
+                        .card-body
+                            h5 Platform Commission
+                            h2 $#{stats.totalCommission}
+
+            .card.mt-4.shadow-sm
+                .card-header.bg-white
+                    h5.mb-0 Recent Transactions
+                .card-body
+                    table.table.table-hover
+                        thead
+                            tr
+                                th Transaction ID
+                                th Booking ID
+                                th Amount
+                                th Status
+                                th Date
+                        tbody
+                            each tx in transactions
+                                tr
+                                    td= tx.transaction_id || 'N/A'
+                                    td ##{tx.booking_id}
+                                    td $#{tx.amount}
+                                    td
+                                        span.badge(class=`bg-${tx.status === 'Completed' ? 'success' : 'warning'}`)= tx.status
+                                    td= new Date(tx.created_at).toLocaleDateString()
+                            else
+                                tr
+                                    td.text-center(colspan="5") No transactions found.

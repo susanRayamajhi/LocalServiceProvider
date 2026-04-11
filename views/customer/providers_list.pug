@@ -1,0 +1,41 @@
+extends ../layouts/main.pug
+
+block content
+    .hero-section.text-center.py-5.mb-5
+        .container
+            h1.display-4.fw-bold.mb-3 Our Service Partners
+            p.lead.text-white-50 Trusted professionals at your service
+
+    .container.pb-5
+        if providers && providers.length > 0
+            .row.g-4
+                each provider in providers
+                    .col-md-4
+                        .card.h-100.p-3
+                            .text-center.mb-4
+                                img.rounded-circle.shadow-sm.mb-3(src=provider.profile_image || "https://ui-avatars.com/api/?name="+provider.name+"&background=3182ce&color=fff" alt=provider.name style="width: 100px; height: 100px; object-fit: cover;")
+                                h4.h5.mb-1= provider.name
+                                .text-warning.small.mb-2
+                                    i.fas.fa-star.me-1
+                                    span.fw-bold= provider.rating || '4.5'
+                                    span.text-muted.ms-1 (50+ Reviews)
+                            
+                            p.text-muted.small.text-center.mb-4= provider.description || "Expert service provider with years of experience in the field."
+                            
+                            ul.list-unstyled.small.mb-4
+                                li.mb-2: i.fas.fa-phone.text-primary.me-2
+                                    span.text-muted= provider.phone || "+1 234 567 890"
+                                li.mb-2: i.fas.fa-check-circle.text-success.me-2
+                                    span.text-muted Verified Expert
+                            
+                            .d-grid
+                                a.btn.btn-outline-primary(href=`/providers/${provider.id}`) 
+                                    i.fas.fa-user.me-2
+                                    | View Profile
+        else
+            .text-center.py-5
+                .feature-icon.mx-auto.mb-4
+                    i.fas.fa-users-slash
+                h3 No partners available.
+                p.text-muted We're currently expanding our network.
+                a.btn.btn-primary.mt-3(href="/") Return Home

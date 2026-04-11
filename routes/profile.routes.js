@@ -1,35 +1,16 @@
-module.exports = app => {
-    const router = require('express').Router();
-    const profile = require('../controllers/profile.controller.js');
+const profile = require('../controllers/profile.controller.js');
+const { isAuthenticated } = require('../middleware/auth.middleware');
 
-    // Simple middleware to check if user is logged in
-    const isLoggedIn = (req, res, next) => {
-        if (req.session.uid) next();
-        else res.status(401).send({ message: "Unauthorized!" });
-    };
+module.exports = router => {
+    // UI Route
+    router.get('/profile', isAuthenticated, profile.getProfileUI);
 
-    router.use(isLoggedIn);
-
-    // Get user profile
-    router.get('/:id', profile.getProfile);
-
-    // Update user profile
-    router.put('/:id', profile.updateProfile);
-
-    // Get user addresses
-    router.get('/:id/addresses', profile.getAddresses);
-
-    // Add user address
-    router.post('/:id/addresses', profile.addAddress);
-
-    // Update user address
-    router.put('/addresses/:id', profile.updateAddress);
-
-    // Delete user address
-    router.delete('/addresses/:id', profile.deleteAddress);
-
-    // Get user bookings
-    router.get('/:id/bookings', profile.getBookings);
-
-    app.use('/api/profile', router);
+    // API Routes
+    router.get('/api/profile/:id', isAuthenticated, profile.getProfile);
+    router.post('/api/profile/update', isAuthenticated, profile.updateProfile);
+    
+    router.get('/api/profile/:id/addresses', isAuthenticated, profile.getAddresses);
+    router.post('/api/profile/:id/addresses', isAuthenticated, profile.addAddress);
+    router.put('/api/profile/addresses/:id', isAuthenticated, profile.updateAddress);
+    router.delete('/api/profile/addresses/:id', isAuthenticated, profile.deleteAddress);
 };

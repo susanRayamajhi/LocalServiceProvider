@@ -1,21 +1,23 @@
-module.exports = app => {
-    const router = require('express').Router();
-    const admin = require('../controllers/admin.controller.js');
+const admin = require('../controllers/admin.controller.js');
+const { isAuthenticated, requireRole } = require('../middleware/auth.middleware');
 
-    // Partner actions
-    router.post('/partners/:id/approve', admin.approvePartner);
-    router.post('/partners/:id/reject', admin.rejectPartner);
-    router.post('/partners/:id/toggle-suspend', admin.togglePartnerSuspend);
-    
-    // User actions
-    router.post('/users/:id/toggle-suspend', admin.toggleSuspend);
+module.exports = router => {
+    // UI Routes
+    router.get("/admin/dashboard", isAuthenticated, requireRole('admin'), admin.getDashboard);
+    router.get("/admin/partners", isAuthenticated, requireRole('admin'), admin.getAllPartners);
+    router.get("/admin/users", isAuthenticated, requireRole('admin'), admin.getAllUsers);
+    router.get("/admin/services", isAuthenticated, requireRole('admin'), admin.getAllServices);
+    router.get("/admin/bookings", isAuthenticated, requireRole('admin'), admin.getAllBookings);
+    router.get("/admin/disputes", isAuthenticated, requireRole('admin'), admin.getDisputes);
+    router.get("/admin/payments", isAuthenticated, requireRole('admin'), admin.getPayments);
+    router.get("/admin/reports", isAuthenticated, requireRole('admin'), admin.getReports);
 
-    // Category actions
-    router.post('/categories', admin.addCategory);
-    router.post('/categories/:id/delete', admin.deleteCategory);
-
-    // Dispute actions
-    router.post('/disputes/:id/resolve', admin.resolveDispute);
-
-    app.use('/api/admin', router);
+    // API Actions
+    router.post('/api/admin/partners/:id/approve', isAuthenticated, requireRole('admin'), admin.approvePartner);
+    router.post('/api/admin/partners/:id/reject', isAuthenticated, requireRole('admin'), admin.rejectPartner);
+    router.post('/api/admin/partners/:id/toggle-suspend', isAuthenticated, requireRole('admin'), admin.togglePartnerSuspend);
+    router.post('/api/admin/users/:id/toggle-suspend', isAuthenticated, requireRole('admin'), admin.toggleSuspend);
+    router.post('/api/admin/categories', isAuthenticated, requireRole('admin'), admin.addCategory);
+    router.post('/api/admin/categories/:id/delete', isAuthenticated, requireRole('admin'), admin.deleteCategory);
+    router.post('/api/admin/disputes/:id/resolve', isAuthenticated, requireRole('admin'), admin.resolveDispute);
 };
