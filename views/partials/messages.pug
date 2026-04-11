@@ -1,0 +1,11 @@
+if error
+    .alert.alert-danger.alert-dismissible.fade.show(role="alert")
+        i.fas.fa-exclamation-circle.me-2
+        = error
+        button.btn-close(type="button" data-bs-dismiss="alert" aria-label="Close")
+
+if message
+    .alert.alert-success.alert-dismissible.fade.show(role="alert")
+        i.fas.fa-check-circle.me-2
+        = message
+        button.btn-close(type="button" data-bs-dismiss="alert" aria-label="Close")

@@ -1,78 +1,114 @@
-const Service = require("../models/service.model");
-const Partner = require("../models/partner.model");
+const Service = require("../models/Service");
+const Partner = require("../models/Partner");
+const Category = require("../models/Category");
 
-exports.getHome = async (req, res) => {
+exports.getHome = async (req, res, next) => {
     try {
         const services = await Service.getFeatured(6);
-        res.render("index", { title: 'Home', services });
+        res.render("customer/index", { title: 'Home', services });
     } catch (err) {
-        console.error(err);
-        res.render("index", { title: 'Home', services: [], error: "Error fetching services" });
+        next(err);
     }
 };
 
-exports.getServices = async (req, res) => {
+exports.getServices = async (req, res, next) => {
     try {
-        const services = await Service.getAll();
-        res.render("services_list", { title: 'Our Services', services });
+        const { search, category, minPrice, maxPrice } = req.query;
+        const filters = { search, category, minPrice, maxPrice };
+        
+        const services = await Service.getAll(filters);
+        const categories = await Category.getAll();
+        
+        res.render("customer/services_list", { 
+            title: 'Our Services', 
+            services, 
+            categories,
+            query: req.query 
+        });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error fetching services");
+        next(err);
     }
 };
 
-exports.getServiceDetail = async (req, res) => {
+exports.getServiceDetail = async (req, res, next) => {
     try {
         const service = await Service.getById(req.params.id);
-        if (!service) return res.status(404).send("Service not found");
+        if (!service) {
+            const err = new Error("Service not found");
+            err.status = 404;
+            return next(err);
+        }
         
-        const providers = await Partner.getProvidersByService(req.params.id);
-        res.render("service_detail", { title: service.name, service, providers });
+        // Assume Partner model has getProvidersByService or use existing one
+        const [providers] = await require('../config/db').query("SELECT * FROM partners WHERE service_id = ?", [req.params.id]);
+        res.render("customer/service_detail", { title: service.name, service, providers });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
+        next(err);
     }
 };
 
-exports.getProviders = async (req, res) => {
+exports.getProviders = async (req, res, next) => {
     try {
         const providers = await Partner.getAll();
-        res.render("providers_list", { title: 'Our Partners', providers });
+        res.render("customer/providers_list", { title: 'Our Partners', providers });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error fetching providers");
+        next(err);
     }
 };
 
-exports.getProviderDetail = async (req, res) => {
+exports.getProviderDetail = async (req, res, next) => {
     try {
-        const provider = await Partner.getById(req.params.id);
-        if (!provider) return res.status(404).send("Provider not found");
+        const provider = await Partner.findById(req.params.id);
+        if (!provider) {
+            const err = new Error("Provider not found");
+            err.status = 404;
+            return next(err);
+        }
         
-        const services = await Partner.getServicesByPartner(req.params.id);
-        res.render("provider_detail", { title: provider.name, provider, services });
+        const [services] = await require('../config/db').query(`
+            SELECT s.* 
+            FROM services s 
+            JOIN partners p ON p.service_id = s.id 
+            WHERE p.id = ?`, [req.params.id]);
+
+        res.render("customer/provider_detail", { title: provider.name, provider, services });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
+        next(err);
     }
 };
 
 exports.getLogin = (req, res) => {
     if (req.session.uid) return res.redirect('/');
-    res.render("login", { title: 'Login' });
+    res.render("customer/login", { title: 'User Login' });
+};
+
+exports.getPartnerLogin = (req, res) => {
+    if (req.session.uid) return res.redirect('/partner/dashboard');
+    res.render("partner/login", { title: 'Partner Login' });
+};
+
+exports.getAdminLogin = (req, res) => {
+    if (req.session.uid) return res.redirect('/admin/dashboard');
+    res.render("admin/login", { title: 'Admin Login' });
 };
 
 exports.getSignup = (req, res) => {
     if (req.session.uid) return res.redirect('/');
-    res.render("signup", { title: 'Signup' });
+    res.render("customer/signup", { title: 'Signup' });
 };
 
+
 exports.getOtp = (req, res) => {
-    res.render("otp", { title: 'Verify OTP', email: req.query.email });
+    res.render("auth/otp", { 
+        title: 'Verify OTP', 
+        email: req.query.email, 
+        type: req.query.type || 'user',
+        error: req.query.error
+    });
 };
 
 exports.getFeedback = (req, res) => {
-    res.render("feedback", {
+    res.render("customer/feedback", {
         title: 'Rate Your Experience',
         booking: { id: req.params.bookingId },
         partner: { name: 'Professional' }
@@ -80,26 +116,29 @@ exports.getFeedback = (req, res) => {
 };
 
 exports.getBookingSuccess = (req, res) => {
-    res.render("booking_success", {
+    res.render("customer/booking_success", {
         title: 'Booking Successful',
         booking: { id: req.params.id, service_name: 'Service', partner_name: 'Provider' }
     });
 };
 
-exports.getBookingForm = async (req, res) => {
+exports.getBookingForm = async (req, res, next) => {
     try {
         const service = await Service.getById(req.params.serviceId);
-        if (!service) return res.status(404).send("Service not found");
+        if (!service) {
+            const err = new Error("Service not found");
+            err.status = 404;
+            return next(err);
+        }
         
-        const providers = await Partner.getProvidersByService(req.params.serviceId);
-        res.render("booking_form", { 
+        const [providers] = await require('../config/db').query("SELECT * FROM partners WHERE service_id = ?", [req.params.serviceId]);
+        res.render("customer/booking_form", { 
             title: 'Book Service', 
             service, 
             providers,
             selectedPartnerId: req.query.partner_id 
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
+        next(err);
     }
 };

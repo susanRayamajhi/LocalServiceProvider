@@ -1,0 +1,88 @@
+extends ../layouts/main.pug
+
+block content
+    .container-fluid.py-4
+        .row
+            .col-md-3
+                .list-group.shadow-sm.mb-4
+                    a.list-group-item.list-group-item-action.active(href="/admin/dashboard")
+                        i.fas.fa-tachometer-alt.me-2
+                        | Dashboard
+                    a.list-group-item.list-group-item-action(href="/admin/users")
+                        i.fas.fa-users.me-2
+                        | Manage Users
+                    a.list-group-item.list-group-item-action(href="/admin/partners")
+                        i.fas.fa-user-tie.me-2
+                        | Manage Partners
+                    a.list-group-item.list-group-item-action(href="/admin/services")
+                        i.fas.fa-th-large.me-2
+                        | Services & Categories
+                    a.list-group-item.list-group-item-action(href="/admin/bookings")
+                        i.fas.fa-calendar-check.me-2
+                        | All Bookings
+                    a.list-group-item.list-group-item-action(href="/admin/disputes")
+                        i.fas.fa-exclamation-triangle.me-2
+                        | Disputes
+                    a.list-group-item.list-group-item-action(href="/admin/payments")
+                        i.fas.fa-file-invoice-dollar.me-2
+                        | Payments
+            
+            .col-md-9
+                h2.fw-bold.mb-4 Admin Command Center
+                
+                // Stats Cards
+                .row.g-4.mb-4
+                    .col-md-3
+                        .card.border-0.shadow-sm.bg-primary.text-white
+                            .card-body.text-center.py-4
+                                h6.text-uppercase.small.opacity-75 Total Users
+                                h2.fw-bold.mb-0= stats.users
+                    .col-md-3
+                        .card.border-0.shadow-sm.bg-success.text-white
+                            .card-body.text-center.py-4
+                                h6.text-uppercase.small.opacity-75 Active Partners
+                                h2.fw-bold.mb-0= stats.partners
+                    .col-md-3
+                        .card.border-0.shadow-sm.bg-info.text-white
+                            .card-body.text-center.py-4
+                                h6.text-uppercase.small.opacity-75 Total Bookings
+                                h2.fw-bold.mb-0= stats.bookings
+                    .col-md-3
+                        .card.border-0.shadow-sm.bg-warning.text-white
+                            .card-body.text-center.py-4
+                                h6.text-uppercase.small.opacity-75 Open Disputes
+                                h2.fw-bold.mb-0= stats.disputes
+
+                // Pending Approvals
+                .card.shadow-sm.border-0
+                    .card-header.bg-white.py-3
+                        h5.fw-bold.mb-0
+                            i.fas.fa-clock.me-2.text-warning
+                            | Pending Partner Approvals
+                    .card-body
+                        .table-responsive
+                            table.table.align-middle
+                                thead.table-light
+                                    tr
+                                        th Name
+                                        th Specialty
+                                        th Joined Date
+                                        th.text-center Actions
+                                tbody
+                                    each p in pendingPartners
+                                        tr
+                                            td.fw-bold= p.name
+                                            td= p.service_name
+                                            td= new Date(p.created_at).toLocaleDateString()
+                                            td.text-center
+                                                form(action=`/api/admin/partners/${p.id}/approve` method="POST" style="display:inline")
+                                                    button.btn.btn-sm.btn-success.me-2(type="submit")
+                                                        i.fas.fa-check.me-1
+                                                        | Approve
+                                                form(action=`/api/admin/partners/${p.id}/reject` method="POST" style="display:inline")
+                                                    button.btn.btn-sm.btn-outline-danger(type="submit")
+                                                        i.fas.fa-times.me-1
+                                                        | Reject
+                                    else
+                                        tr
+                                            td.text-center.py-4.text-muted(colspan="4") No pending approvals at this time.

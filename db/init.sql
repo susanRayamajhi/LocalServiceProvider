@@ -1,5 +1,5 @@
 -- Database: local_service_provider
--- Consolidated schema for Sprint 3 (Adjusted for application compatibility)
+-- Fully Normalized Schema for LSP
 CREATE DATABASE IF NOT EXISTS local_service_provider;
 USE local_service_provider;
 
@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
     role ENUM('customer', 'admin') DEFAULT 'customer',
-    is_suspended BOOLEAN DEFAULT 0,
+    is_suspended BOOLEAN DEFAULT FALSE,
+    is_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -43,10 +44,10 @@ CREATE TABLE IF NOT EXISTS addresses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     address TEXT NOT NULL,
-    city VARCHAR(255),
-    state VARCHAR(255),
-    zip_code VARCHAR(255),
-    is_default BOOLEAN DEFAULT false,
+    city VARCHAR(100),
+    state VARCHAR(100),
+    zip_code VARCHAR(20),
+    is_default BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -64,13 +65,14 @@ CREATE TABLE IF NOT EXISTS partners (
     description TEXT,
     profile_image VARCHAR(255),
     work_images TEXT,
-    pricing TEXT,
+    pricing DECIMAL(10, 2),
     experience INT DEFAULT 0,
     rating DECIMAL(3, 2) DEFAULT 0.00,
     is_approved BOOLEAN DEFAULT FALSE,
-    is_suspended BOOLEAN DEFAULT 0,
+    is_suspended BOOLEAN DEFAULT FALSE,
+    is_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS partner_availability (
@@ -79,13 +81,13 @@ CREATE TABLE IF NOT EXISTS partner_availability (
     available_date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
-    status ENUM('Available', 'Booked', 'Blocked', 'Completed') DEFAULT 'Available',
+    status ENUM('Available', 'Booked', 'Blocked') DEFAULT 'Available',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE
 );
 
 -- =============================================================================
--- 4. BOOKINGS, PAYMENTS & REVIEWS
+-- 4. BOOKINGS & STATUS HISTORY
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS bookings (
@@ -97,13 +99,30 @@ CREATE TABLE IF NOT EXISTS bookings (
     booking_date DATE NOT NULL,
     booking_time TIME NOT NULL,
     total_cost DECIMAL(10, 2) NOT NULL,
-    status ENUM('Pending', 'Confirmed', 'Completed', 'Cancelled') DEFAULT 'Pending',
+    status ENUM('Pending', 'Confirmed', 'Completed', 'Cancelled', 'Rejected') DEFAULT 'Pending',
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE,
-    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE RESTRICT,
+    FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE SET NULL
 );
+
+CREATE TABLE IF NOT EXISTS booking_status_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT NOT NULL,
+    status ENUM('Pending', 'Confirmed', 'Completed', 'Cancelled', 'Rejected') NOT NULL,
+    changed_by_type ENUM('user', 'partner', 'admin') NOT NULL,
+    changed_by_id INT NOT NULL,
+    note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
+);
+
+-- =============================================================================
+-- 5. PAYMENTS & REVIEWS
+-- =============================================================================
 
 CREATE TABLE IF NOT EXISTS payments (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -132,46 +151,36 @@ CREATE TABLE IF NOT EXISTS reviews (
 );
 
 -- =============================================================================
--- 5. COMMUNICATION & DISPUTES
+-- 6. COMMUNICATION (CHAT & NOTIFICATIONS)
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS chat_messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     booking_id INT NOT NULL,
     sender_id INT NOT NULL,
-    sender_type ENUM('user', 'partner', 'admin') NOT NULL DEFAULT 'user',
+    sender_type ENUM('customer', 'partner', 'admin') NOT NULL,
     message TEXT NOT NULL,
-    is_read BOOLEAN DEFAULT false,
+    is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS disputes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    booking_id INT NOT NULL UNIQUE,
-    raised_by_id INT NOT NULL,
-    raised_by_type ENUM('User', 'Partner') NOT NULL,
-    reason TEXT NOT NULL,
-    status ENUM('Open', 'In-Review', 'Resolved', 'Closed') DEFAULT 'Open',
-    resolution TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    resolved_at TIMESTAMP NULL,
     FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT,
+    partner_id INT,
     title VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     type ENUM('info', 'success', 'warning', 'error') DEFAULT 'info',
-    is_read BOOLEAN DEFAULT 0,
+    is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE,
+    CHECK (user_id IS NOT NULL OR partner_id IS NOT NULL)
 );
 
 -- =============================================================================
--- 6. PARTNER VERIFICATION & EARNINGS
+-- 7. PARTNER VERIFICATION & EARNINGS
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS partner_documents (
@@ -204,16 +213,8 @@ CREATE TABLE IF NOT EXISTS partner_earnings (
     FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS partner_img (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    partner_id INT NOT NULL,
-    image_url VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE
-);
-
 -- =============================================================================
--- 7. SYSTEM & AUTHENTICATION
+-- 8. SYSTEM & AUTHENTICATION
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS otps (
@@ -224,18 +225,36 @@ CREATE TABLE IF NOT EXISTS otps (
     expires_at TIMESTAMP NULL
 );
 
-CREATE TABLE IF NOT EXISTS admins (
+CREATE TABLE IF NOT EXISTS disputes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    booking_id INT NOT NULL UNIQUE,
+    raised_by_id INT NOT NULL,
+    raised_by_type ENUM('customer', 'partner') NOT NULL,
+    reason TEXT NOT NULL,
+    status ENUM('Open', 'In-Review', 'Resolved', 'Closed') DEFAULT 'Open',
+    resolution TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP NULL,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
 );
 
 -- =============================================================================
--- 8. COMPREHENSIVE SAMPLE DATA (Password: 'password123')
+-- 9. INDEXES FOR PERFORMANCE
+-- =============================================================================
+
+CREATE INDEX idx_bookings_user_id ON bookings(user_id);
+CREATE INDEX idx_bookings_partner_id ON bookings(partner_id);
+CREATE INDEX idx_bookings_status ON bookings(status);
+CREATE INDEX idx_bookings_date ON bookings(booking_date);
+CREATE INDEX idx_payments_status ON payments(status);
+CREATE INDEX idx_partner_availability_date ON partner_availability(available_date);
+CREATE INDEX idx_reviews_partner_id ON reviews(partner_id);
+
+-- =============================================================================
+-- 10. COMPREHENSIVE SAMPLE DATA
 -- =============================================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE partner_img;
 TRUNCATE TABLE withdrawal_requests;
 TRUNCATE TABLE partner_documents;
 TRUNCATE TABLE notifications;
@@ -243,14 +262,15 @@ TRUNCATE TABLE disputes;
 TRUNCATE TABLE chat_messages;
 TRUNCATE TABLE reviews;
 TRUNCATE TABLE payments;
+TRUNCATE TABLE booking_status_history;
 TRUNCATE TABLE bookings;
 TRUNCATE TABLE partner_availability;
+TRUNCATE TABLE partner_earnings;
 TRUNCATE TABLE partners;
 TRUNCATE TABLE addresses;
 TRUNCATE TABLE users;
 TRUNCATE TABLE services;
 TRUNCATE TABLE service_categories;
-TRUNCATE TABLE admins;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Common Hash for 'password123'
@@ -258,47 +278,46 @@ SET @common_hash = '$2a$10$I67c33eQxMh6ej57qiEj9eWviiko7S40LcvauJK3asR2ZKgLZN6s6
 
 -- 1. service_categories
 INSERT INTO service_categories (id, name, description, image) VALUES
-(101, 'Carpentry', 'Woodwork and furniture repairs', 'carpentry_icon.png'),
-(102, 'Pest Control', 'Eradicating unwanted pests', 'pest_control_icon.png'),
-(103, 'Appliance Repair', 'Fixing household appliances', 'appliance_repair_icon.png'),
-(104, 'Gardening', 'Garden maintenance and landscaping', 'gardening_icon.png'),
-(105, 'Painting', 'Interior and exterior home painting', 'painting_icon.png'),
-(106, 'AC Services', 'Air conditioning repair and maintenance', 'ac_services_icon.png'),
-(107, 'Beauty & Spa', 'Professional grooming and spa at home', 'beauty_spa_icon.png'),
-(108, 'Electrical', 'Electrical wiring and repairs', 'electrical_icon.png'),
-(109, 'Plumbing', 'Water pipe and faucet repairs', 'plumbing_icon.png'),
-(110, 'Automobile', 'Car and bike maintenance', 'auto_icon.png');
+(1, 'Carpentry', 'Woodwork and furniture repairs', 'carpentry_icon.png'),
+(2, 'Pest Control', 'Eradicating unwanted pests', 'pest_control_icon.png'),
+(3, 'Appliance Repair', 'Fixing household appliances', 'appliance_repair_icon.png');
 
 -- 2. services
 INSERT INTO services (id, category_id, name, description, image, base_price) VALUES
-(101, 101, 'Furniture Assembly', 'Assembling new furniture like beds, wardrobes', 'furniture_assembly.png', 120.00),
-(102, 102, 'Cockroach Control', 'Comprehensive pest control for kitchens', 'cockroach_control.png', 90.00),
-(103, 103, 'Washing Machine Repair', 'Fixing common washing machine issues', 'washing_machine.png', 110.00),
-(104, 104, 'Lawn Mowing', 'Regular lawn mowing and trimming', 'lawn_mowing.png', 70.00),
-(105, 105, 'Single Room Painting', 'Painting a single room with premium paint', 'room_painting.png', 200.00),
-(106, 106, 'AC Gas Refill', 'Refilling AC gas and general servicing', 'ac_gas.png', 130.00),
-(107, 107, 'Full Body Massage', 'Relaxing full body spa treatment', 'massage.png', 150.00),
-(108, 108, 'Fan Repair', 'Repairing ceiling or table fans', 'fan_repair.png', 50.00),
-(109, 109, 'Tap Leakage', 'Fixing leaky taps and faucets', 'tap_leak.png', 40.00),
-(110, 110, 'Car Wash', 'Full exterior and interior car cleaning', 'car_wash.png', 100.00);
+(1, 1, 'Furniture Assembly', 'Assembling new furniture like beds, wardrobes', 'furniture_assembly.png', 120.00),
+(2, 2, 'Cockroach Control', 'Comprehensive pest control for kitchens', 'cockroach_control.png', 90.00),
+(3, 3, 'Washing Machine Repair', 'Fixing common washing machine issues', 'washing_machine.png', 110.00);
 
--- 3. users (customer@gmail.com and admin@gmail.com included)
-INSERT INTO users (id, name, email, password, phone, role) VALUES
-(1, 'Admin User', 'admin@gmail.com', @common_hash, '9999999999', 'admin'),
-(2, 'Customer One', 'customer@gmail.com', @common_hash, '8888888888', 'customer'),
-(101, 'Alice Johnson', 'alice@example.com', @common_hash, '9876543210', 'customer'),
-(102, 'Bob Smith', 'bob@example.com', @common_hash, '9876543211', 'customer');
+-- 3. users
+INSERT INTO users (id, name, email, password, phone, role, is_verified) VALUES
+(1, 'Admin User', 'admin@gmail.com', @common_hash, '9999999999', 'admin', 1),
+(2, 'Customer One', 'customer@gmail.com', @common_hash, '8888888888', 'customer', 1);
 
--- 4. partners
-INSERT INTO partners (id, name, email, password, phone, service_id, description, pricing, experience, rating, is_approved) VALUES
-(101, 'Mike Carpentry', 'partner@gmail.com', @common_hash, '8765432101', 101, 'Expert carpenter with 10 years experience', '500', 10, 4.8, 1),
-(102, 'Pest Killers Inc', 'contact@pestkillers.com', @common_hash, '8765432102', 102, 'Certified pest control specialists', '300', 5, 4.5, 1);
+-- 4. addresses
+INSERT INTO addresses (id, user_id, address, city, state, zip_code, is_default) VALUES
+(1, 2, '123 Customer St', 'Tech City', 'Tech State', '12345', 1);
 
--- 5. bookings
-INSERT INTO bookings (id, user_id, partner_id, service_id, booking_date, booking_time, total_cost, status) VALUES
-(101, 101, 101, 101, '2026-03-12', '10:00:00', 120.00, 'Pending'),
-(103, 102, 102, 102, '2026-03-13', '09:30:00', 110.00, 'Completed');
+-- 5. partners
+INSERT INTO partners (id, name, email, password, phone, service_id, description, pricing, experience, rating, is_approved, is_verified) VALUES
+(1, 'Mike Carpentry', 'partner@gmail.com', @common_hash, '8765432101', 1, 'Expert carpenter with 10 years experience', 50.00, 10, 4.8, 1, 1),
+(2, 'Pest Killers Inc', 'contact@pestkillers.com', @common_hash, '8765432102', 2, 'Certified pest control specialists', 40.00, 5, 4.5, 1, 1);
 
--- 6. admins
-INSERT INTO admins (id, email, password) VALUES
-(101, 'admin@gmail.com', @common_hash);
+-- 6. bookings
+INSERT INTO bookings (id, user_id, partner_id, service_id, address_id, booking_date, booking_time, total_cost, status) VALUES
+(1, 2, 1, 1, 1, '2026-03-12', '10:00:00', 120.00, 'Pending'),
+(2, 2, 2, 2, 1, '2026-03-13', '09:30:00', 90.00, 'Completed');
+
+-- 7. booking_status_history
+INSERT INTO booking_status_history (booking_id, status, changed_by_type, changed_by_id, note) VALUES
+(1, 'Pending', 'user', 2, 'Initial booking created'),
+(2, 'Pending', 'user', 2, 'Initial booking created'),
+(2, 'Confirmed', 'partner', 2, 'Partner accepted booking'),
+(2, 'Completed', 'partner', 2, 'Service completed');
+
+-- 8. payments
+INSERT INTO payments (booking_id, user_id, amount, transaction_id, status) VALUES
+(2, 2, 90.00, 'TXN123456789', 'Completed');
+
+-- 9. reviews
+INSERT INTO reviews (booking_id, user_id, partner_id, rating, comment) VALUES
+(2, 2, 2, 5, 'Great and quick service!');

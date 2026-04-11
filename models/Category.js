@@ -1,34 +1,32 @@
-const db = require('./../db');
+const db = require('../config/db');
 
 class Category {
-    id;
-    name;
-    description;
-    image;
-
-    constructor(id) {
-        this.id = id;
-    }
-
-    async getCategoryDetails() {
-        const sql = "SELECT * FROM service_categories WHERE id = ?";
-        const [results] = await db.query(sql, [this.id]);
-        if (results.length > 0) {
-            const data = results[0];
-            this.name = data.name;
-            this.description = data.description;
-            this.image = data.image;
-        }
-    }
-
-    static async getAllCategories(limit = 0) {
-        let sql = "SELECT * FROM service_categories";
+    static async getAll(limit = 0) {
+        let sql = "SELECT * FROM service_categories ORDER BY name ASC";
         if (limit > 0) {
-            sql += " LIMIT " + limit;
+            sql += " LIMIT " + parseInt(limit);
         }
         const [results] = await db.query(sql);
         return results;
     }
+
+    static async getById(id) {
+        const [results] = await db.query("SELECT * FROM service_categories WHERE id = ?", [id]);
+        return results.length ? results[0] : null;
+    }
+
+    static async create(data) {
+        const { name, description, image } = data;
+        const [result] = await db.query(
+            "INSERT INTO service_categories (name, description, image) VALUES (?, ?, ?)",
+            [name, description, image]
+        );
+        return result.insertId;
+    }
+
+    static async delete(id) {
+        await db.query("DELETE FROM service_categories WHERE id = ?", [id]);
+    }
 }
 
-module.exports = { Category };
+module.exports = Category;

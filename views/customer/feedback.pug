@@ -1,0 +1,62 @@
+extends ../layouts/main.pug
+
+block content
+    .container.py-5
+        .row.justify-content-center
+            .col-md-6
+                .card.shadow-lg.border-0
+                    .card-header.bg-primary.text-white.text-center.p-4.border-0
+                        h2.fw-bold.mb-0
+                            i.fas.fa-star.me-2
+                            | Rate Your Experience
+                        p.opacity-75.small.mb-0 How was your service with #{partner.name}?
+                    
+                    .card-body.p-5
+                        form(action="/feedback" method="POST")
+                            input(type="hidden" name="bookingId" value=booking.id)
+                            
+                            .text-center.mb-5
+                                .rating-stars.fs-1
+                                    each star in [5, 4, 3, 2, 1]
+                                        input.d-none(type="radio" name="rating" value=star id=`star${star}` required)
+                                        label.text-muted.cursor-pointer.hover-primary(for=`star${star}` style="direction: rtl;")
+                                            i.fas.fa-star.mx-1
+                                p.small.text-muted.mt-2 Select a star rating
+                            
+                            .mb-4
+                                label.form-label.fw-bold Your Review
+                                textarea.form-control(name="comment" rows="4" placeholder="Describe your experience with the service provider..." required)
+                            
+                            .mb-5
+                                label.form-label.fw-bold.d-block Would you recommend this partner?
+                                .btn-group.w-100(role="group")
+                                    input.btn-check(type="radio" name="recommend" value="yes" id="recYes" autocomplete="off" checked)
+                                    label.btn.btn-outline-success(for="recYes")
+                                        i.fas.fa-thumbs-up.me-2
+                                        | Yes, definitely!
+                                    
+                                    input.btn-check(type="radio" name="recommend" value="no" id="recNo" autocomplete="off")
+                                    label.btn.btn-outline-danger(for="recNo")
+                                        i.fas.fa-thumbs-down.me-2
+                                        | No
+                            
+                            .d-grid
+                                button.btn.btn-primary.btn-lg(type="submit")
+                                    i.fas.fa-paper-plane.me-2
+                                    | Submit Review
+                    
+                    .card-footer.bg-light.text-center.py-3.border-0
+                        a.text-muted.small(href="/bookings") Not now, maybe later
+    
+    style.
+        .rating-stars {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+        }
+        .rating-stars input:checked ~ label,
+        .rating-stars label:hover,
+        .rating-stars label:hover ~ label {
+            color: #f1c40f !important;
+        }
+        .cursor-pointer { cursor: pointer; }

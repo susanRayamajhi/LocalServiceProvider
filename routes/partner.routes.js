@@ -1,15 +1,21 @@
-module.exports = app => {
-    const router = require('express').Router();
-    const partners = require('../controllers/partner.controller.js');
+const partner = require('../controllers/partner.controller.js');
+const { isAuthenticated, requireRole } = require('../middleware/auth.middleware');
+const upload = require('../middleware/upload.middleware');
 
-    router.post('/signup', partners.signup);
-    router.post('/login', partners.login);
+module.exports = router => {
+    // UI Routes
+    router.get('/partner/dashboard', isAuthenticated, requireRole('partner'), partner.getDashboard);
+    router.get('/partner/bookings', isAuthenticated, requireRole('partner'), partner.getBookings);
+    router.get('/partner/availability', isAuthenticated, requireRole('partner'), partner.getAvailability);
+    router.get('/partner/earnings', isAuthenticated, requireRole('partner'), partner.getEarnings);
+    router.get('/partner/withdraw', isAuthenticated, requireRole('partner'), (req, res) => {
+        res.render("partner/withdrawal", { title: 'Withdraw Funds' });
+    });
+    router.get('/partner/profile', isAuthenticated, requireRole('partner'), partner.getProfileUI);
 
-    // Other API routes
-    router.get('/:id', partners.getProfile);
-    router.put('/:id', partners.updateProfile);
-    router.post('/bookings/:id/accept', partners.acceptBooking);
-    router.post('/bookings/:id/reject', partners.rejectBooking);
-
-    app.use('/api/partners', router);
+    // Action Routes
+    router.post('/partner/profile', isAuthenticated, requireRole('partner'), partner.updateProfile);
+    router.post('/partner/upload-document', isAuthenticated, requireRole('partner'), upload.single('document'), partner.uploadDocument);
+    router.post('/api/partners/withdraw', isAuthenticated, requireRole('partner'), partner.requestWithdrawal);
+    router.post('/api/partners/bookings/:bookingId/status/:status', isAuthenticated, requireRole('partner'), partner.updateBookingStatus);
 };

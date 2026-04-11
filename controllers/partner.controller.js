@@ -1,157 +1,167 @@
-const Partner = require("../models/partner.model");
-const Service = require("../models/service.model");
-const db = require('../db');
-const bcrypt = require('bcryptjs');
+const Partner = require('../models/Partner');
+const Booking = require('../models/Booking');
+const Withdrawal = require('../models/Withdrawal');
+const Document = require('../models/Document');
+const Service = require('../models/Service');
 
-// Partner UI Controller
-exports.getDashboard = async (req, res) => {
+exports.getDashboard = async (req, res, next) => {
     try {
-        const partner = await Partner.getById(req.session.uid);
+        const partner = await Partner.findById(req.session.uid);
         
-        const [pending] = await db.query("SELECT COUNT(*) as count FROM bookings WHERE partner_id = ? AND status = 'Pending'", [req.session.uid]);
-        const [earnings] = await db.query("SELECT SUM(total_cost) as total FROM bookings WHERE partner_id = ? AND status = 'Completed'", [req.session.uid]);
-        
-        const [recentBookings] = await db.query(`
-            SELECT b.*, u.name as customer_name, s.name as service_name 
-            FROM bookings b 
-            JOIN users u ON b.user_id = u.id 
-            JOIN services s ON b.service_id = s.id 
-            WHERE b.partner_id = ? 
-            ORDER BY b.created_at DESC LIMIT 5`, [req.session.uid]);
+        const pendingCount = await Booking.countPendingByPartner(req.session.uid);
+        const totalEarnings = await Booking.sumEarningsByPartner(req.session.uid);
+        const recentBookings = await Booking.getByPartner(req.session.uid); // Simplified for now
 
-        res.render('partner_dashboard', {
+        res.render('partner/dashboard', {
             title: 'Partner Dashboard',
             partner: partner || { name: 'Partner', rating: 0 },
-            pendingCount: pending[0].count,
-            totalEarnings: earnings[0].total || 0,
-            recentBookings: recentBookings
+            pendingCount,
+            totalEarnings,
+            recentBookings: recentBookings.slice(0, 5)
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading dashboard");
+        next(err);
     }
 };
 
-exports.getBookings = async (req, res) => {
+exports.getBookings = async (req, res, next) => {
     try {
-        const [bookings] = await db.query(`
-            SELECT b.*, u.name as customer_name, s.name as service_name 
-            FROM bookings b 
-            JOIN users u ON b.user_id = u.id 
-            JOIN services s ON b.service_id = s.id 
-            WHERE b.partner_id = ? 
-            ORDER BY b.created_at DESC`, [req.session.uid]);
-            
-        res.render('partner_bookings', {
+        const bookings = await Booking.getByPartner(req.session.uid);
+        res.render('partner/bookings', {
             title: 'My Bookings',
-            bookings: bookings
+            bookings
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading bookings");
+        next(err);
     }
 };
 
 exports.getAvailability = (req, res) => {
-    res.render('partner_availability', { title: 'Manage Availability' });
-};
-
-exports.getEarnings = (req, res) => {
-    res.render('partner_earnings', {
-        title: 'Earnings & Payouts',
-        stats: { totalEarned: 0, totalWithdrawn: 0, balance: 0 },
-        payouts: []
+    res.render('partner/availability', { 
+        title: 'Manage Availability',
+        message: req.query.message
     });
 };
 
-exports.getProfileUI = async (req, res) => {
+exports.getEarnings = async (req, res, next) => {
     try {
-        const partner = await Partner.getById(req.session.uid);
-        const allServices = await Service.getAll();
-        res.render('partner_profile', {
-            title: 'Edit Profile',
-            partner: partner,
-            allServices: allServices
+        const partnerId = req.session.uid;
+        
+        const totalEarned = await Booking.sumEarningsByPartner(partnerId);
+        const totalWithdrawn = await Withdrawal.sumCompletedByPartner(partnerId);
+        const balance = totalEarned - totalWithdrawn;
+        
+        const payouts = await Withdrawal.getByPartner(partnerId);
+
+        res.render('partner/earnings', {
+            title: 'Earnings & Payouts',
+            stats: { 
+                totalEarned: totalEarned.toFixed(2), 
+                totalWithdrawn: totalWithdrawn.toFixed(2), 
+                balance: balance.toFixed(2) 
+            },
+            payouts: payouts.map(p => ({
+                date: p.requested_at.toDateString(),
+                amount: p.amount,
+                method: 'Bank Transfer',
+                status: p.status
+            }))
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading profile");
+        next(err);
     }
 };
 
-exports.getSignupUI = async (req, res) => {
+exports.getProfileUI = async (req, res, next) => {
+    try {
+        const partner = await Partner.findById(req.session.uid);
+        const allServices = await Service.getAll();
+        const documents = await Document.getByPartner(req.session.uid);
+
+        res.render('partner/profile', {
+            title: 'Edit Profile',
+            partner,
+            allServices,
+            documents,
+            message: req.query.message
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getSignupUI = async (req, res, next) => {
     try {
         const services = await Service.getAll();
-        res.render('partner_signup', { title: 'Partner Signup', services });
+        res.render('partner/signup', { title: 'Partner Signup', services });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading services");
+        next(err);
     }
 };
 
-// API Logic
-exports.signup = async (req, res) => {
+// ACTIONS
+exports.updateProfile = async (req, res, next) => {
     try {
-        const { name, email, password, phone, service_id, description, pricing, experience } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        await Partner.updateProfile(req.session.uid, req.body);
         
-        const [result] = await db.query(
-            "INSERT INTO partners (name, email, password, phone, service_id, description, pricing, experience) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [name, email, hashedPassword, phone, service_id, description, pricing, experience]
-        );
-        
-        res.redirect('/login?message=Partner application submitted. Please login.');
-    } catch (err) {
-        console.error(err);
-        const services = await Service.getAll();
-        res.status(500).render('partner_signup', { title: 'Partner Signup', services, error: "Error during signup" });
-    }
-};
-
-exports.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const [rows] = await db.query("SELECT * FROM partners WHERE email = ?", [email]);
-        if (rows.length > 0) {
-            const partner = rows[0];
-            const match = await bcrypt.compare(password, partner.password);
-            if (match) {
-                req.session.uid = partner.id;
-                req.session.role = 'partner';
-                req.session.user = {
-                    id: partner.id,
-                    name: partner.name,
-                    email: partner.email,
-                    role: 'partner'
-                };
-                return res.redirect('/partner/dashboard');
-            }
+        if (req.session.user) {
+            req.session.user.name = req.body.name;
         }
-        res.status(401).render('login', { title: 'Login', error: "Invalid partner credentials" });
+
+        res.redirect('/partner/profile?message=Profile updated successfully');
     } catch (err) {
-        console.error(err);
-        res.status(500).render('login', { title: 'Login', error: "Internal Server Error" });
+        next(err);
     }
 };
 
-exports.getProfile = (req, res) => { res.send("Partner Profile API"); };
-exports.updateProfile = (req, res) => { res.send("Update Partner Profile API"); };
-exports.acceptBooking = async (req, res) => {
+exports.requestWithdrawal = async (req, res, next) => {
     try {
-        await db.query("UPDATE bookings SET status = 'Confirmed' WHERE id = ? AND partner_id = ?", [req.params.id, req.session.uid]);
-        res.redirect('/partner/bookings');
+        const { amount } = req.body;
+        const partnerId = req.session.uid;
+
+        const totalEarned = await Booking.sumEarningsByPartner(partnerId);
+        const totalRequested = await Withdrawal.sumPendingOrApprovedByPartner(partnerId);
+        const balance = totalEarned - totalRequested;
+
+        if (amount > balance) {
+            const err = new Error("Insufficient balance");
+            err.status = 400;
+            return next(err);
+        }
+
+        await Withdrawal.create(partnerId, amount);
+        res.redirect('/partner/earnings?message=Withdrawal request submitted');
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error accepting booking");
+        next(err);
     }
 };
 
-exports.rejectBooking = async (req, res) => {
+exports.updateBookingStatus = async (req, res, next) => {
     try {
-        await db.query("UPDATE bookings SET status = 'Cancelled' WHERE id = ? AND partner_id = ?", [req.params.id, req.session.uid]);
+        const { bookingId, status } = req.params;
+        const note = req.body.note || `Partner updated status to ${status}`;
+        await Booking.updateStatus(bookingId, status, 'partner', req.session.uid, note);
         res.redirect('/partner/bookings');
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error rejecting booking");
+        next(err);
+    }
+};
+
+exports.uploadDocument = async (req, res, next) => {
+    try {
+        const { document_type } = req.body;
+        const partnerId = req.session.uid;
+        const documentUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+        if (!documentUrl) {
+            const err = new Error("No file uploaded");
+            err.status = 400;
+            return next(err);
+        }
+
+        await Document.create(partnerId, document_type, documentUrl);
+        res.redirect('/partner/profile?message=Document uploaded successfully');
+    } catch (err) {
+        next(err);
     }
 };

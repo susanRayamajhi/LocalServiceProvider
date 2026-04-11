@@ -1,0 +1,13 @@
+extends ../layouts/main.pug
+
+block content
+    .container.mt-5
+        h2.mb-4 My Conversations
+        .list-group
+            each chat in chats
+                a.list-group-item.list-group-item-action.p-4.shadow-sm.mb-3.border(href=`/chat/${chat.booking_id}`)
+                    .d-flex.w-100.justify-content-between
+                        h5.mb-1 Discussion for #{chat.service_name}
+                        small.text-muted= new Date(chat.created_at).toLocaleDateString()
+                    p.mb-1 Last message with Partner: **#{chat.partner_name}**
+                    small.text-primary Click to view full history

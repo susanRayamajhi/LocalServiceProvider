@@ -1,138 +1,181 @@
-const db = require('../db');
+const User = require('../models/User');
+const Partner = require('../models/Partner');
+const Booking = require('../models/Booking');
+const Dispute = require('../models/Dispute');
+const Payment = require('../models/Payment');
+const Service = require('../models/Service');
+const Category = require('../models/Category');
 
-// Admin UI Controller
-exports.getDashboard = async (req, res) => {
+exports.getDashboard = async (req, res, next) => {
     try {
-        const [users] = await db.query("SELECT COUNT(*) as count FROM users WHERE role = 'customer'");
-        const [partners] = await db.query("SELECT COUNT(*) as count FROM partners");
-        const [bookings] = await db.query("SELECT COUNT(*) as count FROM bookings");
-        const [pendingPartners] = await db.query(`
-            SELECT p.*, s.name as service_name 
-            FROM partners p 
-            LEFT JOIN services s ON p.service_id = s.id 
-            WHERE p.is_approved = 0
-        `);
+        const stats = {
+            users: await User.countCustomers(),
+            partners: await Partner.countAll(),
+            bookings: await Booking.countAll(),
+            disputes: await Dispute.countOpen()
+        };
+        
+        const pendingPartners = await Partner.getPending();
 
-        res.render('admin_dashboard', {
+        res.render('admin/dashboard', {
             title: 'Admin Dashboard',
-            stats: { 
-                users: users[0].count, 
-                partners: partners[0].count, 
-                bookings: bookings[0].count, 
-                disputes: 0 
-            },
-            pendingPartners: pendingPartners
+            stats,
+            pendingPartners
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading admin dashboard");
+        next(err);
     }
 };
 
-exports.getAllPartners = async (req, res) => {
+exports.getAllPartners = async (req, res, next) => {
     try {
-        const [partners] = await db.query("SELECT * FROM partners");
-        res.render('admin_partners', {
+        const partners = await Partner.getAll();
+        res.render('admin/partners', {
             title: 'Manage Partners',
-            partners: partners
+            partners
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading partners");
+        next(err);
     }
 };
 
-exports.getAllUsers = async (req, res) => {
+exports.getAllUsers = async (req, res, next) => {
     try {
-        const [users] = await db.query("SELECT * FROM users WHERE role = 'customer'");
-        res.render('admin_users', {
+        const users = await User.getAllCustomers();
+        res.render('admin/users', {
             title: 'Manage Users',
-            users: users
+            users
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading users");
+        next(err);
     }
 };
 
-exports.getAllServices = async (req, res) => {
+exports.getAllServices = async (req, res, next) => {
     try {
-        const [services] = await db.query("SELECT s.*, c.name as category_name FROM services s JOIN service_categories c ON s.category_id = c.id");
-        res.render('admin_services', {
-            title: 'Manage Services',
-            services: services
+        const services = await Service.getAll();
+        const categories = await Category.getAll();
+        res.render('admin/services', {
+            title: 'Manage Services & Categories',
+            services,
+            categories
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading services");
+        next(err);
     }
 };
 
-exports.getAllBookings = async (req, res) => {
+exports.getAllBookings = async (req, res, next) => {
     try {
-        const [bookings] = await db.query(`
-            SELECT b.*, u.name as customer_name, p.name as partner_name, s.name as service_name 
-            FROM bookings b 
-            JOIN users u ON b.user_id = u.id 
-            JOIN partners p ON b.partner_id = p.id 
-            JOIN services s ON b.service_id = s.id
-        `);
-        res.render('admin_bookings', {
+        const bookings = await Booking.getAll();
+        res.render('admin/bookings', {
             title: 'All Bookings',
-            bookings: bookings
+            bookings
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading bookings");
+        next(err);
     }
 };
 
-exports.getDisputes = (req, res) => {
-    res.render('admin_disputes', {
-        title: 'Disputes',
-        disputes: []
-    });
+exports.getDisputes = async (req, res, next) => {
+    try {
+        const disputes = await Dispute.getAll();
+        res.render('admin/disputes', {
+            title: 'Disputes',
+            disputes
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
-exports.getPayments = (req, res) => {
-    res.render('admin_payments', {
-        title: 'Payments',
-        stats: { totalRevenue: 0, totalPayouts: 0, totalCommission: 0 },
-        transactions: []
-    });
+exports.getPayments = async (req, res, next) => {
+    try {
+        const transactions = await Payment.getAll();
+        
+        const totalRevenue = await Payment.sumCompleted();
+        // Assuming some logic for payouts if not explicitly tracked
+        const totalPayouts = 0; // Replace with actual logic
+        const totalCommission = totalRevenue * 0.15;
+
+        res.render('admin/payments', {
+            title: 'Payments',
+            stats: { 
+                totalRevenue: totalRevenue.toFixed(2), 
+                totalPayouts: totalPayouts.toFixed(2), 
+                totalCommission: totalCommission.toFixed(2) 
+            },
+            transactions
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
 exports.getReports = (req, res) => {
-    res.render('admin_reports', { title: 'Generate Reports' });
+    res.render('admin/reports', { title: 'Generate Reports' });
 };
 
 // API Actions
-exports.approvePartner = async (req, res) => {
+exports.approvePartner = async (req, res, next) => {
     try {
-        await db.query("UPDATE partners SET is_approved = 1 WHERE id = ?", [req.params.id]);
+        await Partner.approve(req.params.id);
         res.redirect('/admin/partners');
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error approving partner");
+        next(err);
     }
 };
 
-exports.rejectPartner = async (req, res) => {
+exports.rejectPartner = async (req, res, next) => {
     try {
-        await db.query("DELETE FROM partners WHERE id = ?", [req.params.id]);
+        await Partner.delete(req.params.id);
         res.redirect('/admin/partners');
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error rejecting partner");
+        next(err);
     }
 };
 
-exports.toggleSuspend = async (req, res) => {
+exports.toggleSuspend = async (req, res, next) => {
     try {
-        await db.query("UPDATE users SET is_suspended = NOT is_suspended WHERE id = ?", [req.params.id]);
+        await User.toggleSuspension(req.params.id);
         res.redirect('/admin/users');
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error toggling user status");
+        next(err);
+    }
+};
+
+exports.togglePartnerSuspend = async (req, res, next) => {
+    try {
+        await Partner.toggleSuspension(req.params.id);
+        res.redirect('/admin/partners');
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.addCategory = async (req, res, next) => {
+    try {
+        await Category.create(req.body);
+        res.redirect('/admin/services');
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.deleteCategory = async (req, res, next) => {
+    try {
+        await Category.delete(req.params.id);
+        res.redirect('/admin/services');
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.resolveDispute = async (req, res, next) => {
+    try {
+        await Dispute.resolve(req.params.id, req.body.resolution);
+        res.redirect('/admin/disputes');
+    } catch (err) {
+        next(err);
     }
 };

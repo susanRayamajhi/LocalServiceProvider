@@ -1,19 +1,9 @@
-const db = require('./../db');
+const db = require('../config/db');
 
 class Notification {
-    constructor(data) {
-        this.id = data.id;
-        this.user_id = data.user_id;
-        this.title = data.title;
-        this.message = data.message;
-        this.type = data.type;
-        this.is_read = data.is_read;
-        this.created_at = data.created_at;
-    }
-
-    static async getByUser(user_id) {
+    static async getByUser(userId) {
         const sql = "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC";
-        const [results] = await db.query(sql, [user_id]);
+        const [results] = await db.query(sql, [userId]);
         return results;
     }
 
@@ -23,9 +13,12 @@ class Notification {
     }
 
     static async create(data) {
-        const sql = "INSERT INTO notifications SET ?";
-        const [result] = await db.query(sql, [data]);
-        return { id: result.insertId, ...data };
+        const { user_id, title, message, type = 'info' } = data;
+        const [result] = await db.query(
+            "INSERT INTO notifications (user_id, title, message, type) VALUES (?, ?, ?, ?)",
+            [user_id, title, message, type]
+        );
+        return result.insertId;
     }
 }
 

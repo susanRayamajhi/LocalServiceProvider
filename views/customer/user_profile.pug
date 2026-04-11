@@ -1,0 +1,38 @@
+extends ../layouts/main.pug
+
+block content
+    .row.justify-content-center.mt-5
+        .col-md-8
+            .card.shadow-sm
+                .card-header.bg-white
+                    h3.mb-0 My Profile
+                .card-body
+                    form(action="/profile/update" method="POST")
+                        .row
+                            .col-md-6.mb-3
+                                label.form-label Name
+                                input.form-control(type="text" name="name" value=user.name)
+                            .col-md-6.mb-3
+                                label.form-label Email
+                                input.form-control(type="email" name="email" value=user.email disabled)
+                        
+                        .mb-3
+                            label.form-label Phone Number
+                            input.form-control(type="tel" name="phone" value=user.phone)
+                        
+                        hr
+                        h5 My Addresses
+                        each addr in addresses
+                            .card.bg-light.mb-2
+                                .card-body.p-2
+                                    p.mb-0= `${addr.address}, ${addr.city}, ${addr.state} - ${addr.zip_code}`
+                                    if addr.is_default
+                                        span.badge.bg-success.small Default
+                        else
+                            p.text-muted No addresses added yet.
+                        
+                        button.btn.btn-outline-primary.btn-sm.mt-2(type="button") Add New Address
+                        
+                        hr
+                        .d-grid
+                            button.btn.btn-primary(type="submit") Save Profile Changes
