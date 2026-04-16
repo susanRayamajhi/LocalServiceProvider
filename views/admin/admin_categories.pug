@@ -1,0 +1,40 @@
+extends admin_layout
+
+block content
+    div.admin-table-container(style="margin-bottom: 3rem;")
+        h3 <i class="fas fa-folder-plus"></i> Add New Category
+        form#add-category-form(style="margin-top: 1.5rem;")
+            div.form-grid(style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;")
+                div.form-group
+                    label Category Name
+                    input(type="text", id="category-name", placeholder="e.g. Plumbing", required, style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);")
+                div.form-group
+                    label Image URL (Optional)
+                    input(type="text", id="category-image", placeholder="https://example.com/cat.jpg", style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);")
+            div.form-group(style="margin-bottom: 1.5rem;")
+                label Description
+                textarea(id="category-desc", placeholder="Describe this category", style="width: 100%; height: 80px; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);")
+            button(type="submit", class="button button-success") <i class="fas fa-plus"></i> Add Category
+    
+    div.admin-table-container
+        h3 <i class="fas fa-th-list"></i> Existing Categories
+        div#categories-table-container(style="margin-top: 1.5rem;")
+            p.text-center Loading categories...
+
+    div#edit-category-modal.modal
+        div.modal-content
+            span.close-modal#close-edit-modal &times;
+            h2 <i class="fas fa-edit"></i> Edit Category
+            form#edit-category-form(style="margin-top: 1.5rem;")
+                input(type="hidden", id="edit-category-id")
+                div.form-group(style="margin-bottom: 1.25rem;")
+                    label Name
+                    input(type="text", id="edit-category-name", required, style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);")
+                div.form-group(style="margin-bottom: 1.25rem;")
+                    label Description
+                    textarea(id="edit-category-desc", style="width: 100%; height: 80px; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);")
+                div.form-group(style="margin-bottom: 1.5rem;")
+                    label Image URL
+                    input(type="text", id="edit-category-image", style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);")
+                div(style="display: flex; justify-content: flex-end;")
+                    button.button.button-success(type="submit") <i class="fas fa-check"></i> Update Category
