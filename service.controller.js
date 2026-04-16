@@ -36,4 +36,4 @@ exports.getPartners = (req, res) => {
         else res.send(data);
     });
 };
-gag
+
