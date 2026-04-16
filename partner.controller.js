@@ -2,7 +2,8 @@ const Partner = require('../models/partner.model.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// Signup
+// Signup 
+
 exports.signup = (req, res) => {
     // Validate request
     if (!req.body) {
