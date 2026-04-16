@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+    section.form-section
+        div.form-container
+            h2 Email Verification
+            p An OTP has been sent to your email address. Please enter it below.
+            form.otp-form
+                input(type="hidden", name="email", id="otp-email")
+                div.form-group
+                    label(for="otp") OTP Code
+                    input(type="text", id="otp", name="otp", placeholder="Enter OTP", required)
+                button(type="submit", class="button") Verify OTP
+
+block scripts
+    script.
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        if (email) {
+            document.getElementById('otp-email').value = email;
+        }

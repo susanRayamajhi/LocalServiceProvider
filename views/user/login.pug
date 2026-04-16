@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+    section.form-section
+        div.form-container
+            h2 Welcome Back!
+            form.login-form
+                div.form-group
+                    label(for="email") Email
+                    input(type="email", id="email", placeholder="youremail@example.com", required)
+                div.form-group
+                    label(for="password") Password
+                    input(type="password", id="password", placeholder="Your Password", required)
+                button(type="submit", class="button") Login
+            p Don't have an account? 
+                a(href="/signup") Sign up here
+            p Are you a service professional? 
+                a(href="/partner/login") Register as a Partner

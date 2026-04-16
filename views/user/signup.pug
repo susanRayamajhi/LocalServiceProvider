@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+    section.form-section
+        div.form-container
+            h2 Create Your Account
+            form.signup-form
+                div.form-group
+                    label(for="name") Full Name
+                    input(type="text", id="name", placeholder="John Doe", required)
+                div.form-group
+                    label(for="email") Email
+                    input(type="email", id="email", placeholder="youremail@example.com", required)
+                div.form-group
+                    label(for="phone") Phone Number
+                    input(type="tel", id="phone", placeholder="1234567890", required)
+                div.form-group
+                    label(for="password") Password
+                    input(type="password", id="password", placeholder="Create a strong password", required)
+                button(type="submit", class="button") Sign Up
+            p Already have an account? 
+                a(href="/login") Login here
