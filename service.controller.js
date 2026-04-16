@@ -14,6 +14,7 @@ exports.getAll = (req, res) => {
 
 // Search for services
 exports.search = (req, res) => {
+    // minor update
     const keyword = req.query.keyword;
     Service.search(keyword, (err, data) => {
         if (err)
