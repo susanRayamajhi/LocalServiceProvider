@@ -1,0 +1,37 @@
+div.sidebar
+    h2 <i class="fas fa-shield-alt"></i> Admin Panel
+    nav
+        div.sidebar-section-title Main
+        ul
+            li: a(href="/admin/dashboard", class=(title === "Admin Dashboard" ? "active" : "")) <i class="fas fa-th-large"></i> Dashboard
+        
+        div.sidebar-section-title User Management
+        ul
+            li: a(href="/admin/users", class=(title === "Manage Users" ? "active" : "")) <i class="fas fa-users"></i> Manage Users
+        
+        div.sidebar-section-title Partner Management
+        ul
+            li: a(href="/admin/partners", class=(title === "Manage Partners" ? "active" : "")) <i class="fas fa-handshake"></i> Manage Partners
+        
+        div.sidebar-section-title Service Management
+        ul
+            li: a(href="/admin/categories", class=(title === "Manage Categories" ? "active" : "")) <i class="fas fa-tags"></i> Manage Categories
+            li: a(href="/admin/services", class=(title === "Manage Services" ? "active" : "")) <i class="fas fa-concierge-bell"></i> Manage Services
+        
+        div.sidebar-section-title Operations
+        ul
+            li: a(href="/admin/bookings", class=(title === "Manage Bookings" ? "active" : "")) <i class="fas fa-calendar-alt"></i> Monitor Bookings
+            li: a(href="/admin/disputes", class=(title === "Manage Disputes" ? "active" : "")) <i class="fas fa-exclamation-triangle"></i> Resolve Disputes
+        
+        div.sidebar-section-title Financial
+        ul
+            li: a(href="/admin/payments", class=(title === "Track Payments" ? "active" : "")) <i class="fas fa-credit-card"></i> Track Payments
+            li: a(href="/admin/withdrawals", class=(title === "Manage Withdrawals" ? "active" : "")) <i class="fas fa-wallet"></i> Withdraw Requests
+        
+        div.sidebar-section-title Reports
+        ul
+            li: a(href="/admin/analytics", class=(title === "Analytics" ? "active" : "")) <i class="fas fa-chart-line"></i> View Analytics
+        
+        div.sidebar-section-title System
+        ul
+            li: a(href="#", id="admin-logout-btn") <i class="fas fa-sign-out-alt"></i> Logout
