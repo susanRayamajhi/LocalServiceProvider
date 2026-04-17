@@ -1,0 +1,99 @@
+extends layout
+
+block styles
+    style.
+        .partner-profile-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        .profile-sidebar {
+            background: var(--secondary-color);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .profile-sidebar img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 5px solid var(--accent-color);
+        }
+        .profile-main {
+            background: var(--secondary-color);
+            padding: 2rem;
+            border-radius: 10px;
+        }
+        .info-group {
+            margin-bottom: 2rem;
+        }
+        .info-group h3 {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .review-item {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .rating-stars {
+            color: #f1c40f;
+            font-size: 1.2rem;
+        }
+
+block content
+    section.partner-profile-section
+        div.container
+            div.partner-profile-container
+                aside.profile-sidebar
+                    - var profileImg = partner.profile_image || 'https://via.placeholder.com/200?text=Pro'
+                    img(src=profileImg, alt=partner.name)
+                    h2= partner.name
+                    p(style="color: var(--accent-color); font-weight: bold; font-size: 1.2rem;")= partner.service_name
+                    div.rating-display(style="margin: 1rem 0;")
+                        span.rating-stars= '★'.repeat(Math.round(partner.rating || 0)) + '☆'.repeat(5 - Math.round(partner.rating || 0))
+                        span(style="margin-left: 0.5rem;") (#{partner.rating || '0.0'})
+                    p(style="margin-bottom: 1.5rem;")= partner.description
+                    a.button(href=`/booking?partner_id=${partner.id}&service_id=${partner.service_id}`, style="width: 100%; display: block;") Book Now
+
+                main.profile-main
+                    div.info-group
+                        h3 About the Professional
+                        p= partner.description || "No detailed description provided."
+                        p: strong Experience: #{partner.experience || 'N/A'} years
+                        p: strong Base Pricing: #{partner.pricing || 'Contact for details'}
+                    
+                    if extraServices && extraServices.length > 0
+                        div.info-group
+                            h3 Additional Services
+                            div.extra-services-grid(style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;")
+                                each service in extraServices
+                                    div.extra-service-card(style="background: #fff; padding: 1rem; border-radius: 8px; border: 1px solid #eee;")
+                                        h4= service.service_name
+                                        p(style="font-size: 0.9rem; color: #666;")= service.description
+                                        div(style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;")
+                                            span(style="font-weight: bold; color: var(--primary-color);") £#{service.price}
+                                            a.button(href=`/booking?partner_id=${partner.id}&service_id=${service.service_id}`, style="padding: 0.4rem 0.8rem; font-size: 0.8rem;") Book
+                    
+                    div.info-group
+                        h3 Customer Reviews
+                        if reviews && reviews.length > 0
+                            each review in reviews
+                                div.review-item
+                                    div.review-header
+                                        strong= review.user_name
+                                        span.rating-stars= '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating)
+                                    p= review.comment
+                                    small(style="color: #666;")= new Date(review.created_at).toLocaleDateString()
+                        else
+                            p No reviews yet for this professional.
