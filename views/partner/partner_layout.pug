@@ -1,0 +1,87 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title #{title} - Partner Dashboard
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
+        link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap")
+        link(rel="stylesheet", href="/partner/partner.css")
+        block styles
+    body
+        div.partner-container
+            aside.sidebar
+                div.sidebar-header
+                    div.logo
+                        i.fas.fa-tools
+                        span LSP Partner
+                
+                nav.sidebar-nav
+                    ul
+                        li.nav-item
+                            a(href="/partner/dashboard", class=(title === 'Partner Dashboard' ? 'active' : ''))
+                                i.fas.fa-th-large
+                                span Dashboard
+                        
+                        li.nav-section SERVICES
+                        li.nav-item
+                            a(href="/partner/services", class=(title === 'Manage Services' ? 'active' : ''))
+                                i.fas.fa-concierge-bell
+                                span Manage Services
+                        
+                        li.nav-section BOOKINGS
+                        li.nav-item
+                            a(href="/partner/bookings", class=(title === 'Partner Bookings' ? 'active' : ''))
+                                i.fas.fa-calendar-check
+                                span Bookings
+                        
+                        li.nav-section AVAILABILITY
+                        li.nav-item
+                            a(href="/partner/dashboard#availability-management", id="availability-link-nav")
+                                i.fas.fa-clock
+                                span My Availability
+                        
+                        li.nav-section FINANCE
+                        li.nav-item
+                            a(href="/partner/dashboard#earnings-section", id="earnings-link-nav")
+                                i.fas.fa-wallet
+                                span View Earnings
+                        li.nav-item
+                            a(href="/partner/dashboard#withdrawal-section", id="withdrawal-link-nav")
+                                i.fas.fa-hand-holding-usd
+                                span Withdraw Funds
+                        
+                        li.nav-section SUPPORT
+                        li.nav-item
+                            a(href="/partner/bookings#chat-modal")
+                                i.fas.fa-comments
+                                span Chat with Customers
+                        
+                        li.nav-section SETTINGS
+                        li.nav-item
+                            a(href="/partner/profile", class=(title === 'Partner Profile' ? 'active' : ''))
+                                i.fas.fa-user-circle
+                                span My Profile
+                        li.nav-item
+                            a(href="/partner/documents", class=(title === 'Upload Documents' ? 'active' : ''))
+                                i.fas.fa-file-shield
+                                span Verification Docs
+                        
+                        li.nav-item.logout
+                            a(href="#", id="partner-logout-btn")
+                                i.fas.fa-sign-out-alt
+                                span Logout
+
+            main.main-content
+                header.top-bar
+                    div.page-title
+                        h1 #{title}
+                    div.user-info
+                        span.welcome Welcome back, 
+                        span#partner-name-display.partner-name ...
+                
+                div.content-wrapper
+                    block content
+
+        script(src="/partner/partner.js")
+        block scripts
