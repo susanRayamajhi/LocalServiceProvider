@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    section.services-section
+        div.container
+            if category
+                h2.section-title Services in #{category.name}
+                p.section-subtitle(style="text-align: center; margin-bottom: 3rem;")= category.description
+            else
+                h2.section-title Services
+            
+            div.services-grid(style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;")
+                if services && services.length > 0
+                    each service in services
+                        div.service-card(style="background: #fff; padding: 2rem; border-radius: 10px; box-shadow: var(--shadow); text-align: center;")
+                            - var icon = service.image || `https://img.icons8.com/fluency/80/000000/maintenance.png`
+                            img(src=icon, alt=service.name, style="width: 80px; margin-bottom: 1rem;")
+                            h3= service.name
+                            p(style="color: #666; margin-bottom: 1.5rem;")= service.description
+                            p.price(style="font-weight: bold; font-size: 1.2rem; color: var(--primary-color); margin-bottom: 1.5rem;") From £#{service.base_price}
+                            a.button(href=`/partners?service_id=${service.id}`) See Professional
+                else
+                    p(style="text-align: center; grid-column: 1 / -1;") No specific services found in this category.
