@@ -1,0 +1,22 @@
+extends admin_layout
+
+block content
+    div.admin-table-container
+        div.filter-container(style="margin-bottom: 2rem; display: flex; gap: 1.5rem; align-items: flex-end;")
+            div.form-group(style="margin: 0;")
+                label(style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem;") Filter by Date:
+                input(type="date", id="date-filter", style="padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color);")
+            div.form-group(style="margin: 0;")
+                label(style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem;") Filter by Status:
+                select#booking-status-filter(style="padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); min-width: 180px;")
+                    option(value="all") All Statuses
+                    option(value="Pending") Pending
+                    option(value="Confirmed") Confirmed
+                    option(value="Paid") Paid
+                    option(value="In Progress") In Progress
+                    option(value="Completed") Completed
+                    option(value="Cancelled") Cancelled
+                    option(value="Rejected") Rejected
+        
+        div#bookings-management-table(style="overflow-x: auto;")
+            p.text-center Loading bookings...
