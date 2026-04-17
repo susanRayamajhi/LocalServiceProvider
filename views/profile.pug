@@ -1,0 +1,374 @@
+extends layout
+
+block styles
+    style.
+        .profile-wrapper {
+            padding: 3rem 0;
+            background-color: #f8fafc;
+            min-height: calc(100vh - 72px);
+        }
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+        
+        /* Left Column: Profile Card */
+        .profile-summary-card {
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            height: fit-content;
+            border: 1px solid var(--border-color);
+        }
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            background: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 3.5rem;
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+        }
+        .profile-summary-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.25rem;
+        }
+        .profile-summary-email {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+        .profile-nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        .profile-nav-item {
+            margin-bottom: 0.5rem;
+        }
+        .profile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1.25rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .profile-nav-link i {
+            width: 20px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        .profile-nav-link:hover {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+        .profile-nav-link:hover i {
+            color: var(--primary-color);
+        }
+        .profile-nav-link.active {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .profile-nav-link.active i {
+            color: #fff;
+        }
+
+        /* Right Column: Content Sections */
+        .profile-content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .profile-content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .section-title-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .section-title-text i {
+            color: var(--primary-color);
+        }
+
+        /* Forms */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .info-item {
+            margin-bottom: 1.5rem;
+        }
+        .info-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        .info-value {
+            font-size: 1rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* Booking Cards */
+        .booking-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .booking-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: translateX(5px);
+        }
+        .booking-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .booking-service-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+        .booking-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .meta-item i {
+            color: var(--primary-color);
+            width: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-summary-card {
+                margin-bottom: 1rem;
+            }
+        }
+
+block content
+    div.profile-wrapper
+        div.container
+            div.profile-grid
+                //- Left Column
+                aside.profile-sidebar
+                    div.profile-summary-card
+                        div.profile-avatar-large
+                            i.fas.fa-user-circle
+                        h2.profile-summary-name#summary-name Loading...
+                        p.profile-summary-email#summary-email ...
+                        
+                        nav.profile-nav-menu
+                            li.profile-nav-item
+                                a.profile-nav-link.active(href="#personal-info")
+                                    i.fas.fa-id-card
+                                    span Personal Information
+                            li.profile-nav-item
+                                a.profile-nav-link(href="#my-bookings")
+                                    i.fas.fa-calendar-check
+                                    span My Bookings
+                            li.profile-nav-item
+                                a.profile-nav-link(href="#account-settings")
+                                    i.fas.fa-user-gear
+                                    span Account Settings
+
+                //- Right Column
+                main.profile-main-content
+                    //- Section: Personal Info
+                    div#personal-info.profile-content-section.active
+                        div.section-card
+                            div.section-header
+                                h3.section-title-text
+                                    i.fas.fa-user
+                                    span Personal Details
+                                button.button.button-outline.button-sm#edit-profile-btn
+                                    i.fas.fa-edit
+                                    span Edit Profile
+                            
+                            div.info-display#profile-display
+                                div.info-grid
+                                    div.info-item
+                                        span.info-label Full Name
+                                        div.info-value#field-name ...
+                                    div.info-item
+                                        span.info-label Email Address
+                                        div.info-value#field-email ...
+                                    div.info-item
+                                        span.info-label Phone Number
+                                        div.info-value#field-phone ...
+                                    div.info-item
+                                        span.info-label Member Since
+                                        div.info-value#field-joined ...
+                                
+                                div.info-item(style="margin-top: 1rem;")
+                                    span.info-label Primary Address
+                                    div#address-display-container
+                                        div.info-value#field-address No address provided yet.
+                                        button.button.button-outline.button-sm#add-address-quick-btn(style="margin-top: 0.5rem; display: none;")
+                                            i.fas.fa-plus-circle
+                                            span Add Address
+
+                            form#profile-edit-form(style="display: none;")
+                                div.info-grid
+                                    div.form-group
+                                        label(for="edit-name") Full Name
+                                        input(type="text", id="edit-name", required)
+                                    div.form-group
+                                        label(for="edit-phone") Phone Number
+                                        input(type="text", id="edit-phone")
+                                
+                                div.form-group
+                                    label(for="edit-address") Street Address
+                                    input(type="text", id="edit-address", required)
+                                
+                                div.info-grid
+                                    div.form-group
+                                        label(for="edit-city") City
+                                        input(type="text", id="edit-city", required)
+                                    div.form-group
+                                        label(for="edit-state") State / Province
+                                        input(type="text", id="edit-state")
+                                
+                                div.form-group
+                                    label(for="edit-zip") Zip / Postal Code
+                                    input(type="text", id="edit-zip", required)
+
+                                div(style="display: flex; gap: 1rem; margin-top: 1rem;")
+                                    button.button.button-primary(type="submit") Save Changes
+                                    button.button.button-outline#cancel-edit-btn(type="button") Cancel
+
+                    //- Section: My Bookings
+                    div#my-bookings.profile-content-section
+                        div.section-card
+                            div.section-header
+                                h3.section-title-text
+                                    i.fas.fa-list-ul
+                                    span My Bookings
+                            
+                            div.booking-list-container#bookings-container
+                                p.text-center Loading your bookings...
+
+                    //- Section: Account Settings
+                    div#account-settings.profile-content-section
+                        div.section-card
+                            div.section-header
+                                h3.section-title-text
+                                    i.fas.fa-shield-halved
+                                    span Security & Settings
+                            
+                            div.settings-list
+                                div.info-item
+                                    span.info-label Change Password
+                                    p(style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;") Update your password to keep your account secure.
+                                    button.button.button-outline.button-sm Change Password
+                                
+                                div.dropdown-divider(style="margin: 2rem 0;")
+                                
+                                div.info-item
+                                    span.info-label Account Status
+                                    div(style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;")
+                                        span.status-badge.status-active Active
+                                        span(style="font-size: 0.85rem; color: var(--text-muted);") Your account is in good standing.
+
+block scripts
+    script.
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab Switching Logic
+            const navLinks = document.querySelectorAll('.profile-nav-link');
+            const sections = document.querySelectorAll('.profile-content-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    
+                    navLinks.forEach(nl => nl.classList.remove('active'));
+                    link.classList.add('active');
+                    
+                    sections.forEach(s => {
+                        s.classList.remove('active');
+                        if (s.id === targetId) s.classList.add('active');
+                    });
+                });
+            });
+
+            // Edit Profile Toggle
+            const editBtn = document.getElementById('edit-profile-btn');
+            const cancelBtn = document.getElementById('cancel-edit-btn');
+            const displayDiv = document.getElementById('profile-display');
+            const editForm = document.getElementById('profile-edit-form');
+
+            if (editBtn) {
+                editBtn.onclick = () => {
+                    displayDiv.style.display = 'none';
+                    editForm.style.display = 'block';
+                    editBtn.style.display = 'none';
+                };
+            }
+
+            if (cancelBtn) {
+                cancelBtn.onclick = () => {
+                    displayDiv.style.display = 'block';
+                    editForm.style.display = 'none';
+                    editBtn.style.display = 'flex';
+                };
+            }
+        });
