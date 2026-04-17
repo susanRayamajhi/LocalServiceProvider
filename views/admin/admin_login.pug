@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+    section.form-section
+        div.form-container
+            h2 Admin Login
+            form.admin-login-form
+                div.form-group
+                    label(for="email") Email
+                    input(type="email", id="email", placeholder="admin@example.com", required)
+                div.form-group
+                    label(for="password") Password
+                    input(type="password", id="password", placeholder="Password", required)
+                button(type="submit", class="button") Login
+
+block scripts
+    script(src="/admin/admin.js")
