@@ -1,0 +1,9 @@
+extends admin_layout
+
+block content
+    div.admin-table-container
+        div.search-container(style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;")
+            i.fas.fa-search(style="color: #adb5bd;")
+            input(type="text", id="user-search", placeholder="Search by name or email...", style="padding: 0.8rem; width: 100%; max-width: 400px; border: 1px solid var(--border-color); border-radius: 8px;")
+        div#users-table
+            p.text-center Loading users...
