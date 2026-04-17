@@ -1,52 +1,98 @@
-extends ../layouts/main.pug
+extends partner_layout
 
 block content
-    .row.mt-5
-        .col-md-3
-            .list-group.shadow-sm
-                a.list-group-item.list-group-item-action.active(href="/partner/dashboard") Overview
-                a.list-group-item.list-group-item-action(href="/partner/bookings") My Bookings
-                a.list-group-item.list-group-item-action(href="/partner/availability") Manage Availability
-                a.list-group-item.list-group-item-action(href="/partner/earnings") Earnings & Payouts
-                a.list-group-item.list-group-item-action(href="/partner/profile") Edit Profile
-        
-        .col-md-9
-            h2 Welcome, #{partner.name}!
-            p Here is a summary of your activity from the database.
+    div#dashboard-overview.dashboard-section.active
+        div.dashboard-stats
+            div.stat-card
+                div
+                    h3 Total Bookings
+                    p#total-bookings 0
+                i.fas.fa-calendar-alt.fa-2x(style="color: var(--info-color); opacity: 0.3;")
+            div.stat-card
+                div
+                    h3 Pending Bookings
+                    p#pending-bookings 0
+                i.fas.fa-clock.fa-2x(style="color: var(--warning-color); opacity: 0.3;")
+            div.stat-card
+                div
+                    h3 Completed Bookings
+                    p#completed-bookings 0
+                i.fas.fa-check-circle.fa-2x(style="color: var(--success-color); opacity: 0.3;")
+            div.stat-card
+                div
+                    h3 Total Earnings
+                    p#total-earnings £0
+                i.fas.fa-pound-sign.fa-2x(style="color: var(--success-color); opacity: 0.3;")
 
-            .row.mt-4
-                .col-md-4
-                    .card.bg-primary.text-white.text-center.mb-3
-                        .card-body
-                            h5 Pending Bookings
-                            h2.display-5 #{pendingCount}
-                .col-md-4
-                    .card.bg-success.text-white.text-center.mb-3
-                        .card-body
-                            h5 Total Earnings
-                            h2.display-5 $#{totalEarnings}
-                .col-md-4
-                    .card.bg-info.text-white.text-center.mb-3
-                        .card-body
-                            h5 Rating
-                            h2.display-5 #{partner.rating}★
-            
-            .card.mt-4.shadow-sm
-                .card-header.bg-white
-                    h5.mb-0 Recent Bookings (Real-time)
-                .card-body
-                    table.table.table-hover
-                        thead
-                            tr
-                                th ID
-                                th Customer
-                                th Service
-                                th Status
-                        tbody
-                            each b in recentBookings
-                                tr
-                                    td ##{b.id}
-                                    td= b.customer_name
-                                    td= b.service_name
-                                    td 
-                                        span.badge(class=`bg-${b.status === 'Pending' ? 'warning' : b.status === 'Completed' ? 'success' : 'info'}`)= b.status
+        div.table-card.recent-bookings
+            div.table-header
+                h2 <i class="fas fa-history"></i> Recent Booking Requests
+                a.button.button-outline.button-sm(href="/partner/bookings") View All
+            div.table-responsive
+                div#bookings-table
+                    p.text-center(style="padding: 2rem;") Loading bookings...
+
+    div#earnings-section.dashboard-section
+        div.dashboard-stats
+            div.stat-card
+                div
+                    h3 Cumulative Revenue
+                    p#detailed-total-earnings £0
+                i.fas.fa-chart-line.fa-2x(style="color: var(--success-color); opacity: 0.3;")
+        
+        div.table-card
+            div.table-header
+                h2 <i class="fas fa-list-ul"></i> Recent Transactions
+            div.table-responsive
+                div#earnings-table-container
+                    p.text-center(style="padding: 2rem;") No transactions found.
+
+    div#withdrawal-section.dashboard-section
+        div.dashboard-stats
+            div.stat-card
+                div
+                    h3 Available for Withdrawal
+                    p#available-balance £0
+                i.fas.fa-piggy-bank.fa-2x(style="color: var(--primary-color); opacity: 0.3;")
+        
+        div.table-card(style="max-width: 500px;")
+            div.table-header
+                h2 <i class="fas fa-hand-holding-usd"></i> Request Withdrawal
+            div(style="padding: 1.5rem;")
+                form#withdrawal-request-form
+                    div.form-group
+                        label(for="withdrawal-amount") Amount to Withdraw (£)
+                        input(type="number", id="withdrawal-amount", step="0.01", min="1", placeholder="Enter amount", required)
+                    button.button.button-primary(type="submit", style="width: 100%;") Submit Request
+
+        div.table-card
+            div.table-header
+                h2 <i class="fas fa-history"></i> Withdrawal History
+            div.table-responsive
+                div#withdrawal-history-container
+                    p.text-center(style="padding: 2rem;") No withdrawal requests found.
+
+    div#availability-management.dashboard-section
+        div.table-card(style="max-width: 600px;")
+            div.table-header
+                h2 <i class="fas fa-plus-circle"></i> Add Availability Slot
+            div(style="padding: 1.5rem;")
+                form#add-availability-form.availability-form
+                    div.form-group
+                        label(for="available-date") Date
+                        input(type="date", id="available-date", required)
+                    div(style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;")
+                        div.form-group
+                            label(for="start-time") Start Time
+                            input(type="time", id="start-time", required)
+                        div.form-group
+                            label(for="end-time") End Time
+                            input(type="time", id="end-time", required)
+                    button.button.button-primary(type="submit", style="width: 100%;") <i class="fas fa-plus"></i> Add Slot
+
+        div.table-card
+            div.table-header
+                h2 <i class="fas fa-calendar-alt"></i> Your Available Slots
+            div.table-responsive
+                div#availability-table-container.availability-table
+                    p.text-center(style="padding: 2rem;") Loading availability...
