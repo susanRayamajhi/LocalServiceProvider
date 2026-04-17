@@ -1,0 +1,35 @@
+extends partner_layout
+
+block content
+    div.table-card(style="max-width: 800px; margin: 0 auto;")
+        div.table-header
+            h2 <i class="fas fa-user-edit"></i> Profile Details
+        div(style="padding: 2rem;")
+            form#partner-profile-form
+                div.form-group
+                    label(for="profile-name") Full Name
+                    input(type="text", id="profile-name", required)
+                div.form-group
+                    label(for="profile-email") Email Address
+                    input(type="email", id="profile-email", disabled, style="background-color: var(--bg-main); cursor: not-allowed;")
+                    small(style="color: var(--text-muted);") Email cannot be changed. Contact support for assistance.
+                div.form-group
+                    label(for="profile-description") Professional Bio / Experience
+                    textarea(id="profile-description", rows="5", placeholder="Describe your experience and services...", required)
+                div.form-group
+                    label(for="profile-pricing") Standard Pricing (e.g., £50/hour)
+                    input(type="text", id="profile-pricing", placeholder="e.g. £50/hour or £100 fixed", required)
+                
+                div(style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;")
+                    div.form-group
+                        label(for="profile-image-url") Profile Image URL
+                        input(type="text", id="profile-image-url", placeholder="Link to your photo")
+                    div.form-group
+                        label(for="work-images-url") Portfolio Image URLs
+                        textarea(id="work-images-url", placeholder="Link1, Link2, Link3", rows="1")
+                        small(style="color: var(--text-muted);") Separate multiple URLs with commas.
+
+                div(style="margin-top: 1rem;")
+                    button.button.button-primary(type="submit", style="width: 100%; padding: 0.75rem;") 
+                        i.fas.fa-save
+                        span Update Profile
