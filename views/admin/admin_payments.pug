@@ -1,0 +1,29 @@
+extends admin_layout
+
+block content
+    div.dashboard-stats(style="margin-bottom: 3rem;")
+        div.stat-card.stat-card-success
+            div.stat-icon: i.fas.fa-pound-sign
+            div.stat-details
+                h3 Total Revenue
+                p#summary-total-revenue £0
+        div.stat-card.stat-card-primary
+            div.stat-icon: i.fas.fa-check-circle
+            div.stat-details
+                h3 Successful
+                p#summary-success-count 0
+        div.stat-card.stat-card-danger
+            div.stat-icon: i.fas.fa-times-circle
+            div.stat-details
+                h3 Failed
+                p#summary-failed-count 0
+        div.stat-card.stat-card-warning
+            div.stat-icon: i.fas.fa-clock
+            div.stat-details
+                h3 Pending
+                p#summary-pending-count 0
+
+    div.admin-table-container
+        h2 <i class="fas fa-history"></i> Transaction History
+        div#payments-table-container(style="margin-top: 1.5rem;")
+            p.text-center Loading transactions...
