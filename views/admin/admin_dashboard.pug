@@ -1,0 +1,79 @@
+extends admin_layout
+
+block header_actions
+    button#generate-report-btn.button-success <i class="fas fa-download"></i> Generate Full Report (CSV)
+
+block content
+    div.dashboard-stats
+        div.stat-card.stat-card-primary
+            div.stat-icon: i.fas.fa-users
+            div.stat-details
+                h3 Total Users
+                p#total-users 0
+        div.stat-card.stat-card-info
+            div.stat-icon: i.fas.fa-handshake
+            div.stat-details
+                h3 Total Partners
+                p#total-partners 0
+        div.stat-card.stat-card-warning
+            div.stat-icon: i.fas.fa-cogs
+            div.stat-details
+                h3 Total Services
+                p#total-services 0
+        div.stat-card.stat-card-danger
+            div.stat-icon: i.fas.fa-calendar-check
+            div.stat-details
+                h3 Total Bookings
+                p#total-bookings 0
+        div.stat-card.stat-card-success
+            div.stat-icon: i.fas.fa-pound-sign
+            div.stat-details
+                h3 Total Earnings
+                p#total-earnings £0
+
+    div.dashboard-stats-secondary(style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;")
+        div.stat-card-small
+            h4 Pending Approvals
+            p#pending-partners 0
+        div.stat-card-small
+            h4 Active Users
+            p#active-users 0
+        div.stat-card-small
+            h4 Suspended Users
+            p#suspended-users 0
+        div.stat-card-small
+            h4 Successful Payments
+            p#successful-payments 0
+        div.stat-card-small
+            h4 Failed Payments
+            p#failed-payments 0
+
+    div.charts-grid(style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;")
+        div.chart-container(style="background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);")
+            h3 Booking Trends (Last 30 Days)
+            canvas#dashboardBookingChart
+        
+        div.chart-container(style="background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);")
+            h3 Revenue Growth
+            canvas#dashboardRevenueChart
+
+    div.dashboard-bottom-grid(style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;")
+        div.recent-bookings(style="background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);")
+            div.header-actions(style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;")
+                h2 Recent Bookings
+                a(href="/admin/bookings", class="button button-info button-sm") View All
+            div.filters(style="margin-bottom: 1rem; display: flex; gap: 1rem;")
+                select#recent-booking-status-filter(class="form-control" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color);")
+                    option(value="all") All Statuses
+                    option(value="Pending") Pending
+                    option(value="Completed") Completed
+                    option(value="Cancelled") Cancelled
+            div#bookings-table(style="overflow-x: auto;")
+        
+        div.quick-actions(style="background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);")
+            h2 Quick Links
+            ul.quick-links-list(style="list-style: none; padding: 0; margin: 0;")
+                li(style="margin-bottom: 1rem;"): a(href="/admin/partners" class="button button-info" style="display: flex; width: 100%; justify-content: center;") Review Pending Partners
+                li(style="margin-bottom: 1rem;"): a(href="/admin/disputes" class="button button-danger" style="display: flex; width: 100%; justify-content: center;") Handle Open Disputes
+                li(style="margin-bottom: 1rem;"): a(href="/admin/withdrawals" class="button button-warning" style="display: flex; width: 100%; justify-content: center;") Process Withdrawals
+                li(style="margin-bottom: 1rem;"): a(href="/admin/analytics" class="button button-success" style="display: flex; width: 100%; justify-content: center;") Detailed Analytics
