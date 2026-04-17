@@ -1,0 +1,82 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title #{title} - Local Service Provider
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
+        link(rel="stylesheet", href="/css/style.css")
+        block styles
+    body
+        header
+            nav.navbar
+                div.nav-container
+                    div.nav-left
+                        a.logo(href="/") 
+                            i.fas.fa-house-chimney
+                            span LocalService
+                    
+                    button.mobile-toggle#mobile-toggle
+                        i.fas.fa-bars
+
+                    div.nav-center#nav-menu
+                        ul.nav-links
+                            li: a(href="/", class=(title === 'Home' ? 'active' : '')) 
+                                i.fas.fa-home
+                                span Home
+                            li: a(href="/services", class=(title === 'All Services' ? 'active' : '')) 
+                                i.fas.fa-briefcase
+                                span Professionals
+                            li#nav-bookings-link(style="display:none;"): a(href="/profile#bookings") 
+                                i.fas.fa-calendar-check
+                                span My Bookings
+
+                    div.nav-right#nav-auth
+                        //- Guest Group
+                        div#guest-links.auth-group
+                            a.login-link(href="/login") Login
+                            a.register-btn(href="/signup") Register
+                        
+                        //- User Group (Dropdown)
+                        div#user-dropdown.nav-dropdown(style="display:none;")
+                            button.dropdown-trigger#dropdown-trigger
+                                div.avatar
+                                    i.fas.fa-user-circle
+                                span.username#nav-username User
+                                i.fas.fa-chevron-down.chevron
+                            div.dropdown-menu#dropdown-menu
+                                a(href="/profile")
+                                    i.fas.fa-user
+                                    span View Profile
+                                a(href="/profile#bookings")
+                                    i.fas.fa-list-ul
+                                    span My Bookings
+                                div.dropdown-divider
+                                a#logout-btn(href="#")
+                                    i.fas.fa-sign-out-alt
+                                    span Logout
+
+        main
+            block content
+
+        footer
+            div.container.footer-container
+                div.footer-about
+                    h3 Local Service Provider
+                    p Your one-stop solution for finding and booking trusted local service professionals. We're dedicated to making your life easier.
+                div.footer-links
+                    h3 Quick Links
+                    ul
+                        li: a(href="/") Home
+                        li: a(href="/services") Services
+                        li: a(href="/login") Login
+                        li: a(href="/signup") Sign Up
+                div.footer-contact
+                    h3 Contact Us
+                    p Email: support@localserviceprovider.com
+                    p Phone: 123-456-7890
+            div.footer-bottom
+                p &copy; 2026 Local Service Provider. All rights reserved.
+
+        script(src="/js/main.js")
+        block scripts
