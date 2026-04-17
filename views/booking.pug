@@ -1,0 +1,43 @@
+extends layout
+
+block content
+    section.form-section
+        div.form-container(style="max-width: 600px;")
+            h2 Book a Service
+            div.booking-details
+                h3 Booking Summary
+                div.service-details(style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);")
+                    if partner
+                        p Booking service from 
+                            strong= partner.name
+                    else
+                        p Loading details...
+                
+                div.cost-summary(style="margin-bottom: 2rem; text-align: left;")
+                    if cost
+                        p Service Cost: £#{cost.serviceCost.toFixed(2)}
+                        p Handling Fee: £#{cost.handlingFee.toFixed(2)}
+                        p Tax (2%): £#{cost.tax.toFixed(2)}
+                        p: strong Total: £#{cost.totalCost.toFixed(2)}
+
+            form.booking-form
+                input(type="hidden", id="partner-id", value=partner.id)
+                input(type="hidden", id="service-id", value=serviceId)
+                input(type="hidden", id="base-price", value=partner.pricing)
+                
+                div.availability-info(style="margin-bottom: 1.5rem; padding: 1rem; background: #e9ecef; border-radius: 8px;")
+                    h4 Professional's Availability
+                    div#available-slots-container
+                        p Loading available slots...
+                    p(style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;") * Please select a date and time from the professional's schedule.
+
+                div.form-group
+                    label(for="date") Preferred Date
+                    input(type="date", id="date", required)
+                div.form-group
+                    label(for="time") Preferred Time
+                    input(type="time", id="time", required)
+                div#address-notice(style="margin-bottom: 1.5rem; padding: 1rem; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; color: #856404; font-size: 0.9rem;")
+                    i.fas.fa-info-circle(style="margin-right: 0.5rem;")
+                    span The service will be performed at your saved profile address.
+                button(type="submit", class="button") Confirm & "Pay"
