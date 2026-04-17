@@ -1,0 +1,27 @@
+extends partner_layout
+
+block content
+    div.table-card(style="max-width: 600px; margin-bottom: 2rem;")
+        div.table-header
+            h2 <i class="fas fa-plus-circle"></i> Add Additional Service
+        div(style="padding: 1.5rem;")
+            form#add-partner-service-form
+                div.form-group
+                    label(for="service-id") Select Service
+                    select#service-id(name="service_id", required)
+                        if services
+                            each service in services
+                                option(value=service.id)= service.name
+                div.form-group
+                    label(for="service-price") Custom Pricing for this Service (£)
+                    input(type="number", id="service-price", name="price", step="0.01", required, placeholder="e.g. 75.00")
+                button.button.button-primary(type="submit", style="width: 100%;") 
+                    i.fas.fa-plus
+                    span Add to My Services
+
+    div.table-card
+        div.table-header
+            h2 <i class="fas fa-tools"></i> My Active Services
+        div.table-responsive
+            div#my-services-table
+                p.text-center(style="padding: 2rem;") Loading your services...
