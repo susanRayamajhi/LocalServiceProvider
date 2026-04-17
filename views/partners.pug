@@ -1,0 +1,67 @@
+extends layout
+
+block content
+    section.partners-search-section
+        div.container
+            //- Search Header
+            div.top-search-header
+                h2.section-title Find Local Professionals
+                div.search-bar-container
+                    form.search-form(id="partners-search-form")
+                        i.fas.fa-search
+                        input(type="text", placeholder="What service are you looking for? (e.g. Plumbing, Cleaning)", id="search-input")
+                        button(type="submit") Search
+
+            div.partners-page-layout
+                //- LEFT: Filter Sidebar
+                aside.filter-sidebar
+                    h3
+                        i.fas.fa-sliders-h
+                        | Filter Results
+                    
+                    form.filter-form
+                        div.filter-group
+                            label Category
+                            select#filter-category
+                                option(value="") All Categories
+                                if categories
+                                    each cat in categories
+                                        option(value=cat.id)= cat.name
+                        
+                        button.button(type="button", id="apply-filters") Apply Filters
+                        button(type="button", id="reset-filters") Reset
+
+                //- RIGHT: Results Grid
+                div.partner-results-area
+                    div.results-info
+                        p#results-count
+                    
+                    div.partner-grid(id="partner-list")
+                        if partners && partners.length > 0
+                            each partner in partners
+                                div.partner-card-new
+                                    div.card-image-wrapper
+                                        - var profileImg = partner.profile_image || 'https://images.unsplash.com/photo-1581578731522-a2047a2aa988?q=80&w=500&auto=format&fit=crop'
+                                        img(src=profileImg, alt=partner.name)
+                                        div.rating-badge
+                                            i.fas.fa-star
+                                            | #{partner.rating ? parseFloat(partner.rating).toFixed(1) : 'New'}
+                                    
+                                    div.card-content
+                                        h4= partner.partner_name || partner.name
+                                        div.service-category-tag= partner.category_name || 'Professional'
+                                        p= partner.description || 'Experienced professional dedicated to delivering exceptional results for all your service needs.'
+                                        
+                                        div.card-footer
+                                            div.pricing-info
+                                                span FROM
+                                                div.price-value £#{partner.pricing}
+                                            
+                                            div.card-actions
+                                                a.button(href=`/booking?partner_id=${partner.id}&service_id=${partner.service_id}`) Book
+                                                a.button-secondary(href=`/partners/${partner.id}`) See Professional
+
+                            div.no-results
+                                div.icon 🕵️‍♂️
+                                h3 No professionals found
+                                p Try adjusting your filters or search terms to find what you're looking for.
