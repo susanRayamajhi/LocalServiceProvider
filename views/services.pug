@@ -1,0 +1,51 @@
+extends layout
+
+block content
+    section.services-section
+        div.container
+            h2.section-title Our Services
+            p.section-subtitle(style="text-align: center; margin-bottom: 2rem;") Browse our full range of professional home and business services.
+            
+            //- Search and Filter Bar (Top Position Restored)
+            div.services-search-container(style="max-width: 900px; margin: 0 auto 3rem auto; background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-color);")
+                form#services-search-form(style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;")
+                    div.search-input-group(style="flex: 2; min-width: 250px;")
+                        label(style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;") Search Services
+                        input#search-input(type="text", placeholder="What service do you need? (e.g. Plumbing)", style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;")
+                    
+                    div.filter-input-group(style="flex: 1; min-width: 180px;")
+                        label(style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;") Category
+                        select#filter-category(style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: white;")
+                            option(value="") All Categories
+                            if categories
+                                each cat in categories
+                                    option(value=cat.id)= cat.name
+                            else if services
+                                - var uniqueCats = [...new Set(services.map(s => s.category_name))]
+                                each cat in uniqueCats
+                                    option(value=cat)= cat
+                    
+                    button.button(type="submit", style="padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600;") Search
+            
+            //- Results Grid
+            div.services-grid(id="partner-list")
+                if services && services.length > 0
+                    each service in services
+                        div.service-card
+                            - var icon = service.image || `https://img.icons8.com/fluency/80/000000/maintenance.png`
+                            div.service-icon-wrapper
+                                img(src=icon, alt=service.name)
+                            div.category-badge= service.category_name
+                            h3= service.name
+                            p= service.description
+                            div.card-footer(style="margin-top: auto; padding-top: 1.25rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;")
+                                div.pricing-info
+                                    span FROM
+                                    div.price-value £#{service.base_price}
+                                div.card-actions
+                                    //- Changed to AJAX-friendly See Professional
+                                    a.button(href=`/partners?service_id=${service.id}`, class="see-pro-btn") See Professional
+
+                else
+                    div.no-results(style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--secondary-color); border-radius: 10px;")
+                        p No services found matching your criteria.
