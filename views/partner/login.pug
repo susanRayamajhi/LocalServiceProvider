@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+    section.form-section
+        div.form-container
+            h2 Partner Login
+            form.partner-login-form
+                div.form-group
+                    label(for="email") Email
+                    input(type="email", id="email", placeholder="partner@example.com", required)
+                div.form-group
+                    label(for="password") Password
+                    input(type="password", id="password", placeholder="Password", required)
+                button(type="submit", class="button") Login
+            p Don't have an account? 
+                a(href="/partner/signup") Register here
+
+block scripts
+    script(src="/partner/partner.js")
