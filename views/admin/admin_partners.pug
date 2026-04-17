@@ -1,0 +1,48 @@
+extends admin_layout
+
+block content
+    div.admin-table-container
+        div.filter-container(style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;")
+            i.fas.fa-filter(style="color: #adb5bd;")
+            select#partner-status-filter(style="padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; min-width: 200px;")
+                option(value="all") All Professionals
+                option(value="approved") Approved
+                option(value="pending") Pending Approval
+        div#partners-table
+            p.text-center Loading professionals...
+
+    div#partner-modal.modal
+        div.modal-content
+            span.close-modal &times;
+            h2#modal-partner-name Partner Details
+            div#modal-partner-content
+                div(style="display: flex; gap: 2rem; margin-bottom: 2rem;")
+                    img#modal-partner-image.partner-profile-img(src="", alt="Partner Profile", style="display:none;")
+                    div(style="flex: 1;")
+                        div.partner-details-grid
+                            div Email:
+                            div#modal-partner-email
+                            div Service ID:
+                            div#modal-partner-service
+                            div Rating:
+                            div#modal-partner-rating
+                            div Status:
+                            div#modal-partner-status
+                
+                form#edit-partner-form
+                    input(type="hidden", id="modal-partner-id")
+                    div.form-group
+                        label(for="modal-partner-description-edit") Description:
+                        textarea#modal-partner-description-edit(style="width: 100%; height: 100px; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);")
+                    
+                    div.form-group
+                        label(for="modal-partner-pricing-edit") Pricing (£/hr):
+                        input(type="text", id="modal-partner-pricing-edit", style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);")
+                    
+                    div#modal-partner-docs(style="margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1rem;")
+                        h3 <i class="fas fa-file-alt"></i> Verification Documents
+                        div#modal-docs-list
+                            p.text-center Loading documents...
+                    
+                    div#modal-actions(style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;")
+                        button(type="submit", class="button button-success") <i class="fas fa-save"></i> Save Changes
