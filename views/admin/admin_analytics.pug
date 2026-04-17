@@ -1,0 +1,32 @@
+extends admin_layout
+
+block content
+    div.dashboard-stats(style="margin-bottom: 2rem;")
+        div.stat-card.stat-card-success
+            div.stat-icon: i.fas.fa-pound-sign
+            div.stat-details
+                h3 Total Revenue
+                p#analytics-revenue £0
+        div.stat-card.stat-card-primary
+            div.stat-icon: i.fas.fa-calendar-check
+            div.stat-details
+                h3 Total Bookings
+                p#analytics-bookings 0
+        div.stat-card.stat-card-info
+            div.stat-icon: i.fas.fa-users
+            div.stat-details
+                h3 Platform Users
+                p#analytics-users 0
+    
+    div.charts-grid(style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;")
+        div.chart-container(style="background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);")
+            h3 <i class="fas fa-chart-line"></i> Booking Trends (Last 30 Days)
+            canvas#bookingTrendChart
+        
+        div.chart-container(style="background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);")
+            h3 <i class="fas fa-chart-bar"></i> Revenue Growth
+            canvas#revenueTrendChart
+
+        div.chart-container(style="background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow);")
+            h3 <i class="fas fa-chart-pie"></i> Booking Status Distribution
+            canvas#statusDistChart
